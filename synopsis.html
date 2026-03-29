@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미라클 레인저 - 머더미스터리</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Hi+Melody&display=swap');
+        @font-face {
+            font-family: 'Hangyoansim Badsseugi';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2409-2@1.0/Hangyoansim-Badsseugi.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: '210 Didimmyeongjo';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2412-2@1.0/210Didimmyeongjo030.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 1240px;
+            position: relative;
+        }
+
+        /* 밝은 영역 (인트로 + 액션) */
+        .section-bright {
+            background: linear-gradient(180deg, #ffffff 0%, #fffefa 100%);
+        }
+
+        /* 전환 영역 */
+        .section-transition {
+            background: linear-gradient(180deg,
+                #fffefa 0%,
+                #e8e8e8 10%,
+                #b0b0b0 25%,
+                #707070 45%,
+                #404040 65%,
+                #1a1a1a 85%,
+                #0a0a0a 100%);
+            padding: 100px 100px;
+            text-align: center;
+        }
+
+        /* 어두운 영역 (연구소 + 공포 + 결론) */
+        .section-dark {
+            background: linear-gradient(180deg, #0a0a0a 0%, #050505 50%, #000 100%);
+        }
+
+        /* 색상 */
+        .c-red { color: #e53935; }
+        .c-black { color: #333; }
+        .c-blue { color: #1565c0; }
+        .c-yellow { color: #f9a825; }
+        .c-pink { color: #ec407a; }
+
+        /* ========== 섹션 1: 인트로 ========== */
+        .section-intro {
+            padding: 100px 100px 50px;
+            text-align: center;
+        }
+
+        .sfx-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 10px 30px;
+        }
+
+        .sfx-main {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 8rem;
+            color: #e53935;
+            text-shadow:
+                6px 6px 0 #ffd600,
+                12px 12px 0 #ff9800,
+                18px 18px 0 rgba(0,0,0,0.12);
+            line-height: 1;
+            letter-spacing: 8px;
+            position: relative;
+            z-index: 1;
+            transform: skewX(-5deg);
+        }
+
+        .sfx-spark {
+            position: absolute;
+            width: 40px;
+            height: 5px;
+            background: linear-gradient(90deg, #ffd600, #ff9800, transparent);
+            transform-origin: left center;
+            border-radius: 3px;
+        }
+
+        .sfx-spark:nth-child(2) { top: 15%; right: -25px; transform: rotate(-35deg); }
+        .sfx-spark:nth-child(3) { top: 50%; right: -35px; transform: rotate(0deg); width: 50px; }
+        .sfx-spark:nth-child(4) { top: 85%; right: -25px; transform: rotate(35deg); }
+
+        .scream {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3.5rem;
+            color: #4a148c;
+            margin: 24px 0 40px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, transparent, rgba(128,0,128,0.2), transparent);
+            padding: 16px 40px;
+            border-radius: 30px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .scream::before,
+        .scream::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            width: 22px;
+            height: 38px;
+            background: linear-gradient(180deg, #6a0080 0%, #4a0060 100%);
+            opacity: 0.2;
+            border-radius: 50% 50% 30% 30%;
+        }
+
+        .scream::before {
+            left: 15%;
+            transform: rotate(-25deg);
+        }
+
+        .scream::after {
+            right: 15%;
+            transform: rotate(25deg);
+        }
+
+        .scream.villain {
+            font-size: 2.8rem;
+            color: #6a1b9a;
+            background: linear-gradient(90deg, transparent, rgba(106,27,154,0.25), transparent);
+            margin: 40px 0 30px;
+            padding: 20px 30px;
+            line-height: 1.6;
+            position: relative;
+            text-align: center;
+            overflow: visible;
+            text-shadow:
+                0 0 10px rgba(106,27,154,0.4),
+                2px 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+
+        .scream.villain::before,
+        .scream.villain::after {
+            content: '';
+            position: absolute;
+            top: -16px;
+            width: 28px;
+            height: 48px;
+            background: linear-gradient(180deg, #8e24aa 0%, #6a1b9a 100%);
+            opacity: 0.35;
+            border-radius: 50% 50% 30% 30%;
+        }
+
+        .scream.villain::before {
+            left: 15%;
+            transform: rotate(-25deg);
+        }
+
+        .scream.villain::after {
+            right: 15%;
+            transform: rotate(25deg);
+        }
+
+        .child-txt {
+            font-family: 'Hangyoansim Badsseugi', 'Gaegu', cursive;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #222;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+
+        .child-txt.bold {
+            color: #111;
+            font-size: 3.2rem;
+        }
+
+        .miracle {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3.5rem;
+            margin: 32px 0;
+            letter-spacing: 2px;
+        }
+
+        .miracle .ranger-text {
+            background: linear-gradient(90deg,
+                #e53935 0%,
+                #e53935 20%,
+                #1565c0 40%,
+                #f9a825 60%,
+                #ec407a 80%,
+                #ec407a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 4rem;
+            text-shadow: none;
+            filter: drop-shadow(4px 4px 4px rgba(0,0,0,0.2));
+        }
+
+        .ranger-img {
+            width: 90%;
+            max-width: 900px;
+            margin: 32px 0 20px;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+            border-radius: 16px;
+            transform: rotate(-1deg);
+        }
+
+        .names {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3.5rem;
+            margin: 32px 0;
+            letter-spacing: 4px;
+            padding: 20px 40px;
+            background: linear-gradient(90deg,
+                rgba(229,57,53,0.1),
+                rgba(51,51,51,0.1),
+                rgba(21,101,192,0.1),
+                rgba(249,168,37,0.1),
+                rgba(216,27,96,0.1));
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        .quote {
+            font-family: 'Hangyoansim Badsseugi', 'Gaegu', cursive;
+            font-size: 2.2rem;
+            color: #b71c1c;
+            margin: 32px 0;
+            padding: 24px 36px;
+            background: rgba(183,28,28,0.08);
+            border-left: 6px solid #e53935;
+            border-radius: 0 20px 20px 0;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .quote.highlight {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3.5rem;
+            color: #e53935;
+            padding: 32px 56px;
+            background: linear-gradient(90deg, rgba(229,57,53,0.15), rgba(255,235,59,0.1));
+            border-left: 8px solid #e53935;
+            box-shadow: 0 6px 20px rgba(229,57,53,0.2);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        .red-quote {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .red-icon-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .red-icon-wrap::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff5252 0%, #e53935 100%);
+            box-shadow: 0 0 15px rgba(229,57,53,0.5);
+            z-index: 0;
+        }
+
+        .red-icon {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .admire {
+            font-family: 'Hangyoansim Badsseugi', 'Gaegu', cursive;
+            font-size: 1.6rem;
+            color: #e53935;
+            margin-top: 10px;
+        }
+
+        /* ========== 섹션 2: 액션 ========== */
+        .section-action {
+            padding: 50px 100px 100px;
+        }
+
+        .act {
+            display: flex;
+            align-items: center;
+            margin: 14px 0;
+            gap: 14px;
+        }
+
+        .act-bubble {
+            flex: 1;
+            position: relative;
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 10px 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .act-bubble::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -8px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-right: 8px solid rgba(255,255,255,0.95);
+        }
+
+        .act-t {
+            font-family: 'Hangyoansim Badsseugi', 'Gaegu', cursive;
+            font-size: 2.2rem;
+            color: #222;
+            line-height: 1.6;
+            word-break: keep-all;
+            margin: 0;
+        }
+
+        .act-i-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .act-i-wrap::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .act.black .act-i-wrap::before {
+            background: linear-gradient(135deg, #555 0%, #222 100%);
+            box-shadow: 0 0 15px rgba(50,50,50,0.4);
+        }
+        .act.blue .act-i-wrap::before {
+            background: linear-gradient(135deg, #42a5f5 0%, #1565c0 100%);
+            box-shadow: 0 0 15px rgba(21,101,192,0.4);
+        }
+        .act.yellow .act-i-wrap::before {
+            background: linear-gradient(135deg, #ffca28 0%, #f9a825 100%);
+            box-shadow: 0 0 15px rgba(249,168,37,0.4);
+        }
+        .act.pink .act-i-wrap::before {
+            background: linear-gradient(135deg, #f48fb1 0%, #ec407a 100%);
+            box-shadow: 0 0 15px rgba(236,64,122,0.4);
+        }
+
+        .act-i {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .best {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 2.8rem;
+            color: #111;
+            text-align: center;
+            margin: 48px 0 32px;
+            letter-spacing: 2px;
+        }
+
+        .team {
+            font-family: 'Hangyoansim Badsseugi', 'Gaegu', cursive;
+            font-size: 2.5rem;
+            color: #333;
+            text-align: center;
+            margin: 32px 0;
+            padding: 20px 32px;
+            background: linear-gradient(90deg, transparent, rgba(100,181,246,0.2), transparent);
+            border-radius: 30px;
+        }
+
+        .boom-container {
+            position: relative;
+            text-align: center;
+            margin: 24px 0;
+            padding: 32px 0;
+            background: radial-gradient(ellipse at center,
+                rgba(255,220,100,0.3) 0%,
+                rgba(255,150,50,0.15) 40%,
+                transparent 70%);
+        }
+
+        .boom {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 8rem;
+            color: #e53935;
+            text-shadow:
+                8px 8px 0 #ffd600,
+                16px 16px 0 #ff9800,
+                24px 24px 0 rgba(0,0,0,0.12);
+            line-height: 1;
+            letter-spacing: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .vic {
+            text-align: center;
+            margin: 24px 0;
+            padding: 24px 20px;
+            background: linear-gradient(180deg,
+                rgba(255,250,230,0.5) 0%,
+                rgba(255,245,200,0.7) 50%,
+                rgba(255,250,230,0.5) 100%);
+            border-radius: 20px;
+            position: relative;
+            border: 2px dashed rgba(255,200,100,0.4);
+            box-shadow:
+                0 3px 15px rgba(255,200,100,0.2),
+                inset 0 0 40px rgba(255,255,255,0.4);
+        }
+
+        .vic::before {
+            content: '✨';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            background: #fffefa;
+            padding: 0 10px;
+        }
+
+        .vic p {
+            font-family: 'Hangyoansim Badsseugi', 'Gaegu', cursive;
+            font-size: 2.5rem;
+            color: #222;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+
+        .vic .dim {
+            color: #444;
+            font-size: 1.2rem;
+        }
+
+        .wonder-wrap {
+            position: relative;
+            padding: 30px 20px;
+        }
+
+        .wonder-wrap::before,
+        .wonder-wrap::after {
+            content: '?';
+            position: absolute;
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 5rem;
+            color: rgba(255,255,255,0.06);
+        }
+        .wonder-wrap::before { top: -10px; left: 5%; }
+        .wonder-wrap::after { bottom: -10px; right: 5%; transform: rotate(15deg); }
+
+        .wonder-t {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 4rem;
+            color: #333;
+            letter-spacing: 6px;
+            margin-bottom: 56px;
+            text-shadow:
+                0 0 10px #fff,
+                0 0 20px #fff,
+                0 0 30px #fff;
+        }
+
+        .wonder-q {
+            font-family: 'Hangyoansim Badsseugi', 'Gaegu', cursive;
+            font-size: 2.8rem;
+            color: #fff;
+            margin: 40px 0;
+            line-height: 1.8;
+            text-align: center;
+            text-shadow:
+                0 0 8px rgba(0,0,0,0.8),
+                0 0 15px rgba(0,0,0,0.6),
+                0 2px 4px rgba(0,0,0,0.9);
+        }
+
+        .wonder-q.main {
+            font-size: 3.2rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 48px;
+        }
+
+        .wonder-q.sub {
+            font-size: 2.5rem;
+            color: #ddd;
+            letter-spacing: 2px;
+        }
+
+        /* ========== 섹션 4: 비밀 연구소 ========== */
+        .section-lab {
+            padding: 100px 100px 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* 붉은 페이드인 오버레이 */
+        .section-lab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 350px;
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(60,0,0,0.15) 30%,
+                rgba(80,0,0,0.3) 60%,
+                rgba(100,0,0,0.5) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .lab {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 4rem;
+            color: #aaa;
+            letter-spacing: 20px;
+            margin-bottom: 64px;
+            position: relative;
+        }
+
+        .lab::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #555, transparent);
+            margin: 16px auto 0;
+        }
+
+        .dark {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 2rem;
+            color: #777;
+            line-height: 2;
+            margin: 16px 0;
+            letter-spacing: 2px;
+        }
+
+        .dark.highlight {
+            color: #bbb;
+            margin-bottom: 48px;
+            font-size: 2.2rem;
+        }
+
+        .dark.break {
+            margin-bottom: 20px;
+        }
+
+        .dark.emphasis {
+            color: #c0c0c0;
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+            padding: 0 16px;
+        }
+
+        .dark.emphasis::before,
+        .dark.emphasis::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        .dark.emphasis::before { left: -35px; }
+        .dark.emphasis::after { right: -35px; }
+
+        /* 시간 전환 */
+        .time-break {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 2.5rem;
+            color: #999;
+            letter-spacing: 16px;
+            margin: 64px 0;
+            padding: 32px 0;
+            position: relative;
+        }
+
+        .time-break::before,
+        .time-break::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .time-break::before { top: 0; }
+        .time-break::after { bottom: 0; }
+
+        /* 긴장감 강조 */
+        .dark.tension {
+            color: #d0d0d0;
+            font-size: 2.2rem;
+            padding: 24px 40px;
+            margin: 32px 0;
+            background: rgba(255,255,255,0.03);
+            border-left: 4px solid rgba(198,40,40,0.4);
+            display: inline-block;
+        }
+
+        /* 문단 그룹 */
+        .para-group {
+            margin: 24px 0;
+            padding: 16px 0;
+            position: relative;
+        }
+
+        .para-group::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 20px auto 0;
+        }
+
+        .para-group:last-of-type::after {
+            display: none;
+        }
+
+        .door {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 2.5rem;
+            color: #fff;
+            font-weight: 700;
+            margin: 48px 0;
+            letter-spacing: 6px;
+            padding: 32px 64px;
+            border: 3px solid rgba(255,255,255,0.3);
+            display: inline-block;
+            background: linear-gradient(180deg,
+                rgba(60,60,60,0.8) 0%,
+                rgba(30,30,30,0.9) 100%);
+            box-shadow:
+                0 0 20px rgba(255,255,255,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .door::before,
+        .door::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+        .door::before { left: -30px; }
+        .door::after { right: -30px; }
+
+        .vic-img-wrap {
+            position: relative;
+            margin: 48px auto 0;
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .vic-img {
+            width: 100%;
+            display: block;
+            filter: brightness(0.4) saturate(0.7) contrast(1.1);
+            mask-image: radial-gradient(ellipse 70% 65% at center,
+                #000 40%,
+                rgba(0,0,0,0.5) 65%,
+                transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 65% at center,
+                #000 40%,
+                rgba(0,0,0,0.5) 65%,
+                transparent 85%);
+        }
+
+        /* ========== 섹션 5: 공포 ========== */
+        .section-horror {
+            padding: 50px 100px 100px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(180deg,
+                rgba(100,0,0,0.5) 0%,
+                rgba(80,0,0,0.5) 20%,
+                rgba(60,0,0,0.4) 50%,
+                rgba(40,0,0,0.3) 80%,
+                #050505 100%);
+        }
+
+        .horror-t {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 2.8rem;
+            color: #999;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            line-height: 1.8;
+            margin: 20px 0;
+            letter-spacing: 6px;
+            position: relative;
+        }
+
+        .horror-t.blood {
+            color: #b71c1c;
+            font-size: 3.5rem;
+            text-shadow:
+                0 0 20px rgba(183,28,28,0.8),
+                0 0 40px rgba(183,28,28,0.5),
+                0 2px 2px rgba(0,0,0,0.8);
+            margin: 32px 0;
+        }
+
+        .horror-t.big {
+            font-size: 4rem;
+            margin-top: 48px;
+            color: #e53935;
+            letter-spacing: 10px;
+            text-shadow:
+                0 0 30px rgba(229,57,53,0.9),
+                0 0 60px rgba(229,57,53,0.6),
+                0 4px 8px rgba(0,0,0,0.7);
+        }
+
+        /* ========== 섹션 6: 결론 ========== */
+        .section-final {
+            padding: 100px 100px;
+            text-align: center;
+        }
+
+        .doc {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 2rem;
+            color: #666;
+            line-height: 2;
+            margin: 32px 0;
+            letter-spacing: 2px;
+        }
+
+        .doc-s {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 2.2rem;
+            color: #999;
+            margin: 48px 0;
+            letter-spacing: 2px;
+            padding: 28px 48px;
+            border-left: 5px solid #555;
+            display: inline-block;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .sus {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3.5rem;
+            color: #ccc;
+            margin: 48px 0;
+            letter-spacing: 4px;
+            padding: 36px 64px;
+            background: linear-gradient(180deg,
+                rgba(255,255,255,0.08) 0%,
+                rgba(255,255,255,0.03) 100%);
+            border-radius: 20px;
+            display: inline-block;
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .sus-name {
+            font-weight: bold;
+        }
+        .sus-name.black { color: #bbb; }
+        .sus-name.blue { color: #64b5f6; }
+        .sus-name.yellow { color: #ffd54f; }
+        .sus-name.pink { color: #f48fb1; }
+
+        .doc-e {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 2rem;
+            color: #777;
+            line-height: 2.2;
+            margin: 32px 0;
+            letter-spacing: 1px;
+        }
+
+        .final {
+            margin-top: 80px;
+            position: relative;
+            padding: 100px 50px;
+            background: radial-gradient(ellipse at center,
+                rgba(100,0,0,0.2) 0%,
+                transparent 60%);
+        }
+
+        .final::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(198,40,40,0.5), transparent);
+        }
+
+        .final-l {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3rem;
+            color: #999;
+            margin: 28px 0;
+            letter-spacing: 8px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .final-l.red {
+            font-size: 4rem;
+            color: #e53935;
+            text-shadow:
+                0 0 30px rgba(229,57,53,0.7),
+                0 0 60px rgba(229,57,53,0.4),
+                0 4px 8px rgba(0,0,0,0.5);
+            margin: 28px 0;
+            letter-spacing: 10px;
+        }
+
+        /* 캐릭터 소개 영역 */
+        .hero-intro {
+            background: linear-gradient(180deg,
+                rgba(255,250,240,0.4) 0%,
+                rgba(255,245,220,0.6) 50%,
+                rgba(255,250,240,0.4) 100%);
+            border-radius: 20px;
+            padding: 20px 16px;
+            margin: 0 0 24px;
+            box-shadow:
+                0 2px 15px rgba(255,200,100,0.15),
+                inset 0 0 30px rgba(255,255,255,0.3);
+            border: 2px dashed rgba(255,180,100,0.3);
+        }
+
+        /* 타이틀 섹션 */
+        .title-section {
+            margin-top: 80px;
+            padding: 130px 50px;
+            text-align: center;
+            position: relative;
+        }
+
+        .title-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 760px;
+            opacity: 0.45;
+            filter: brightness(1.8) contrast(1.1);
+            z-index: 0;
+        }
+
+        .main-title {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 5rem;
+            color: #e53935;
+            letter-spacing: 10px;
+            text-shadow:
+                0 0 30px rgba(229,57,53,0.6),
+                0 0 60px rgba(229,57,53,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== 구성품 섹션 ========== */
+        .components-section {
+            background: linear-gradient(180deg,
+                #000 0%,
+                #050508 15%,
+                #0a0a10 30%,
+                #0a0a10 70%,
+                #050508 85%,
+                #000 100%);
+            padding: 120px 100px 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .components-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(229,57,53,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(21,101,192,0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .comp-header {
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .comp-subtitle {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 1.2rem;
+            color: #cc4444;
+            letter-spacing: 8px;
+            margin-bottom: 16px;
+            text-shadow: 0 0 15px rgba(200,60,60,0.4);
+        }
+
+        .comp-title {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3.5rem;
+            color: #fff;
+            letter-spacing: 8px;
+            margin-bottom: 32px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .comp-tags {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .comp-tag {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 1.4rem;
+            color: #c0b0b0;
+            background: rgba(100,30,30,0.3);
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: 2px solid rgba(150,60,60,0.3);
+            letter-spacing: 2px;
+        }
+
+        .comp-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .comp-item {
+            background: linear-gradient(135deg,
+                rgba(40,15,15,0.8) 0%,
+                rgba(25,8,8,0.9) 100%);
+            border: 2px solid rgba(150,60,60,0.25);
+            border-radius: 16px;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .comp-qty {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 4rem;
+            color: #ff5555;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(255,60,60,0.4);
+        }
+
+        .comp-name {
+            font-family: 'Gowun Dodum', sans-serif;
+            font-size: 1.8rem;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .comp-desc {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+        }
+
+        /* ========== 테스터 후기 섹션 ========== */
+        .review-section {
+            background: linear-gradient(180deg,
+                #000 0%,
+                #252525 8%,
+                #505050 18%,
+                #808080 30%,
+                #b0b0b0 45%,
+                #d8d8d8 60%,
+                #f0f0f0 80%,
+                #fff 100%);
+            padding: 120px 100px 220px;
+            text-align: center;
+        }
+
+        .review-header {
+            margin-bottom: 30px;
+        }
+
+        .review-subtitle {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 1.2rem;
+            color: #ff5555;
+            letter-spacing: 8px;
+            margin-bottom: 16px;
+            text-shadow: 0 0 15px rgba(255,60,60,0.6);
+        }
+
+        .review-title {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 3.5rem;
+            color: #f0e8e8;
+            letter-spacing: 8px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .review-title::before,
+        .review-title::after {
+            content: '★';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            color: #ff5555;
+        }
+
+        .review-title::before {
+            left: -28px;
+        }
+
+        .review-title::after {
+            right: -28px;
+        }
+
+        /* 테스터 아이콘 */
+        .reviewer-icon {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #ff5555 0%, #cc3333 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 8px 30px rgba(255,60,60,0.4),
+                0 0 60px rgba(255,60,60,0.2);
+            position: relative;
+        }
+
+        .reviewer-icon::before {
+            content: '';
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            background: #fff;
+            border-radius: 50%;
+            top: 28px;
+        }
+
+        .reviewer-icon::after {
+            content: '';
+            position: absolute;
+            width: 92px;
+            height: 56px;
+            background: #fff;
+            border-radius: 100px 100px 0 0;
+            bottom: 16px;
+        }
+
+        .reviewer-name {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 2rem;
+            color: #ff5555;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 50px;
+            text-shadow: 0 0 10px rgba(255,60,60,0.5);
+        }
+
+        .review-box {
+            background: linear-gradient(135deg,
+                rgba(60,60,60,0.9) 0%,
+                rgba(40,40,40,0.95) 100%);
+            border: 2px solid rgba(255,60,60,0.3);
+            border-radius: 24px;
+            padding: 60px 60px;
+            margin-bottom: 60px;
+            box-shadow:
+                0 4px 20px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .review-game-title {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 2.5rem;
+            color: #ff5555;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255,60,60,0.5);
+        }
+
+        .review-text {
+            font-family: '210 Didimmyeongjo', 'Gowun Dodum', serif;
+            font-size: 1.6rem;
+            color: #e8e8e8;
+            line-height: 2.2;
+            letter-spacing: 1px;
+            text-align: left;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .review-text + .review-text {
+            margin-top: 40px;
+        }
+
+        .review-highlight {
+            color: #ff8888;
+            font-weight: 500;
+        }
+
+        .review-credits {
+            margin-top: 80px;
+            padding-top: 60px;
+            border-top: 2px solid rgba(0,0,0,0.15);
+        }
+
+        .review-credits-text {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 1.6rem;
+            color: #333;
+            letter-spacing: 4px;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+        }
+
+        .review-credits-names {
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 2.2rem;
+            color: #1a1a1a;
+            font-weight: 700;
+            letter-spacing: 6px;
+            margin-top: 16px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- 밝은 영역 -->
+        <div class="section-bright">
+
+        <!-- 인트로 -->
+        <div class="section-intro">
+            <div class="sfx-container">
+                <div class="sfx-main">콰앙!</div>
+                <div class="sfx-spark"></div>
+                <div class="sfx-spark"></div>
+                <div class="sfx-spark"></div>
+            </div>
+            <div class="scream">"우하하하, 지구는 내 것이다!"</div>
+
+            <p class="child-txt">오늘도 괴인이 나타났어.</p>
+            <p class="child-txt bold">근데 괜찮아!</p>
+            <p class="child-txt">우리에게는...</p>
+
+            <img src="이미지1_cropped.png" alt="미라클 레인저" class="ranger-img">
+
+            <div class="names">
+                <span class="c-red">레드</span>,
+                <span class="c-black">블랙</span>,
+                <span class="c-blue">블루</span>,
+                <span class="c-yellow">옐로</span>,
+                <span class="c-pink">핑크</span>!
+            </div>
+
+            <p class="miracle"><span class="ranger-text">미라클 레인저</span>가 있거든!</p>
+
+            <p class="child-txt">처음에는 비겁한 괴인들이 이기고 있었는데,</p>
+
+            <div class="red-quote">
+                <div class="red-icon-wrap">
+                    <img src="레드.png" alt="레드" class="red-icon">
+                </div>
+                <p class="quote highlight">"모두, 협동 공격이다!"</p>
+            </div>
+
+            <p class="child-txt">내가 쩨일 좋아하는 레드가 말하니까,</p>
+            <p class="child-txt bold">모두가 힘을 합쳐서</p>
+            <p class="child-txt bold">괴인을 공격하기 시작했어!</p>
+        </div>
+
+        <!-- 액션 -->
+        <div class="section-action">
+            <div class="hero-intro">
+                <div class="act black">
+                    <div class="act-i-wrap">
+                        <img src="블랙.png" alt="블랙" class="act-i">
+                    </div>
+                    <div class="act-bubble">
+                        <p class="act-t"><span class="c-black">블랙</span>이 빵빵! 총 쏘니까 괴인이 쓰러졌어!</p>
+                    </div>
+                </div>
+
+                <div class="act blue">
+                    <div class="act-i-wrap">
+                        <img src="블루.png" alt="블루" class="act-i">
+                    </div>
+                    <div class="act-bubble">
+                        <p class="act-t"><span class="c-blue">블루</span>는 슝- 하고 엄청 빨라!!</p>
+                    </div>
+                </div>
+
+                <div class="act yellow">
+                    <div class="act-i-wrap">
+                        <img src="옐로.png" alt="옐로" class="act-i">
+                    </div>
+                    <div class="act-bubble">
+                        <p class="act-t">우와아 <span class="c-yellow">옐로</span> 번쩍번쩍! 썬더 크러쉬다!!</p>
+                    </div>
+                </div>
+
+                <div class="act pink">
+                    <div class="act-i-wrap">
+                        <img src="핑크.png" alt="핑크" class="act-i">
+                    </div>
+                    <div class="act-bubble">
+                        <p class="act-t"><span class="c-pink">핑크</span> 채찍 휘리릭! 진짜 멋있어~!</p>
+                    </div>
+                </div>
+
+                <div class="best">마지막으로 <span class="c-red">레드</span>가 숭 숭! 대검을 내리치니까,</div>
+            </div>
+
+            <div class="boom-container">
+                <div class="boom">펑!</div>
+            </div>
+
+            <div style="text-align: center;">
+                <div class="scream villain">"크아악! 친구를 아끼는 그 마음,<br>어디까지 가나 보자!!"</div>
+            </div>
+
+            <p class="team">드디어 괴인이 쓰러졌어!</p>
+
+            <div class="vic">
+                <p><b>미라클 레인저 다섯 명이 힘을 합치면 무적이야!</b></p>
+                <p><b>"고마워요, 미라클 레인저!"</b></p>
+                <p><b>영웅들은 손을 흔들고 사라졌어.</b></p>
+                <p><b>엄마가 야채 많이 먹으면</b></p>
+                <p><b>나도 영웅처럼 될 수 있다는데 사실일까?</b></p>
+            </div>
+        </div>
+
+        </div><!-- section-bright 끝 -->
+
+        <!-- 전환 -->
+        <div class="section-transition">
+            <div class="wonder-wrap">
+                <div class="wonder-t">근데 있잖아...</div>
+                <p class="wonder-q main">영웅들은 싸움이 끝나면<br>어디로 가는 걸까?</p>
+                <p class="wonder-q sub">비밀 기지가 있을까?<br>거기서 뭘 할까?</p>
+            </div>
+        </div>
+
+        <!-- 어두운 영역 -->
+        <div class="section-dark">
+
+        <!-- 비밀 연구소 -->
+        <div class="section-lab">
+            <h2 class="lab">비밀 연구소</h2>
+
+            <div class="para-group">
+                <p class="dark">괴인과의 전투를 마친 레인저들은</p>
+                <p class="dark">유니폼을 벗어던지고,</p>
+                <p class="dark">지친 듯 각자의 방으로 사라졌다.</p>
+            </div>
+
+            <div class="para-group">
+                <p class="dark">괴인은 이제 슬슬</p>
+                <p class="dark emphasis">감당하기 어려울 정도로 강해지고,</p>
+                <p class="dark">또한 교활해지고 있었다.</p>
+            </div>
+
+            <div class="para-group">
+                <p class="dark">모두의 구심점인 레드에 의지해</p>
+                <p class="dark">우리 레인저는 겨우 일상을 유지하고 있었다.</p>
+            </div>
+
+            <p class="time-break">다음날 아침.</p>
+
+            <div class="para-group">
+                <p class="dark">식사 시간이 되어 하나둘 모였지만,</p>
+                <p class="dark tension">레드의 자리는 비어 있었다.</p>
+            </div>
+
+            <div class="para-group">
+                <p class="dark">그의 방 방문을 두드려 보았지만</p>
+                <p class="dark">아무런 대답이 없었고,</p>
+                <p class="dark emphasis">문은 굳게 잠겨 있었다.</p>
+            </div>
+
+            <div class="para-group">
+                <p class="dark">마침 출장을 마치고 돌아온</p>
+                <p class="dark">박사의 카드키로 잠긴 방문을 열자...</p>
+            </div>
+
+            <div class="vic-img-wrap">
+                <img src="수정 이미지.png" alt="쓰러진 레드" class="vic-img">
+            </div>
+        </div>
+
+        <!-- 공포 -->
+        <div class="section-horror">
+            <p class="horror-t">레드는 머리에</p>
+            <p class="horror-t blood">피를 흘린 채</p>
+            <p class="horror-t big">침대에 누워 있었다.</p>
+        </div>
+
+        <!-- 결론 -->
+        <div class="section-final">
+            <p class="doc">
+                박사는 한동안 말을 잃은 채 서 있다가,<br>
+                겨우 정신을 차렸다.
+            </p>
+
+            <p class="doc-s">...진정해요. 모두 진정하세요.</p>
+
+            <div class="sus">
+                <span class="sus-name black">블랙</span>,
+                <span class="sus-name blue">블루</span>,
+                <span class="sus-name yellow">옐로</span>,
+                <span class="sus-name pink">핑크</span>
+            </div>
+
+            <p class="doc">박사는 네 사람을 차례로 둘러보았다.</p>
+
+            <p class="doc-e">
+                여러분을 의심하는 건 아니에요.<br>
+                하지만 누가 레드를 죽였는지<br>
+                반드시 밝혀야 해요.
+            </p>
+
+            <p class="doc-e">일단 모든 잠금을 해제하겠습니다.</p>
+
+            <p class="doc-e">
+                어젯밤 무슨 일이 있었는지,<br>
+                연구소를 함께 조사해봅시다.
+            </p>
+
+            <div class="final">
+                <p class="final-l">우리 중</p>
+                <p class="final-l">레드를 살해한</p>
+                <p class="final-l red">범인은</p>
+                <p class="final-l red">누구인가?</p>
+            </div>
+
+            <div class="title-section">
+                <img src="이미지3.png" alt="" class="title-bg">
+                <h1 class="main-title">레드가 죽은 연구소</h1>
+            </div>
+        </div>
+
+        </div><!-- section-dark 끝 -->
+
+        <!-- 구성품 섹션 -->
+        <div class="components-section">
+            <div class="comp-header">
+                <p class="comp-subtitle">WHAT'S IN THE BOX</p>
+                <h2 class="comp-title">게임 구성품</h2>
+                <div class="comp-tags">
+                    <span class="comp-tag">4인</span>
+                    <span class="comp-tag">어반 판타지</span>
+                    <span class="comp-tag">90분+</span>
+                    <span class="comp-tag">선택에 따른 멀티엔딩</span>
+                </div>
+            </div>
+            <div class="comp-grid">
+                <div class="comp-item">
+                    <span class="comp-qty">1</span>
+                    <span class="comp-name">게임 박스</span>
+                </div>
+                <div class="comp-item">
+                    <span class="comp-qty">1</span>
+                    <span class="comp-name">스포일러 방지카드</span>
+                    <span class="comp-desc">턴 마커 겸용 (카드 뒷면)</span>
+                </div>
+                <div class="comp-item">
+                    <span class="comp-qty">1</span>
+                    <span class="comp-name">게임 설명서</span>
+                    <span class="comp-desc">QR 코드 엔딩북 포함</span>
+                </div>
+                <div class="comp-item">
+                    <span class="comp-qty">4</span>
+                    <span class="comp-name">인물 설명서</span>
+                    <span class="comp-desc">캐릭터별 1부</span>
+                </div>
+                <div class="comp-item">
+                    <span class="comp-qty">8</span>
+                    <span class="comp-name">소지품 카드</span>
+                    <span class="comp-desc">캐릭터별 2장</span>
+                </div>
+                <div class="comp-item">
+                    <span class="comp-qty">24</span>
+                    <span class="comp-name">탐색 카드</span>
+                    <span class="comp-desc">일반 20 / 특수 4</span>
+                </div>
+                </div>
+        </div>
+
+        <!-- 테스터 후기 섹션 -->
+        <div class="review-section">
+            <div class="review-header">
+                <p class="review-subtitle">TESTER'S REVIEW</p>
+                <h2 class="review-title">테스터 후기</h2>
+            </div>
+
+            <div class="reviewer-icon"></div>
+            <p class="reviewer-name">5saint</p>
+
+            <div class="review-box">
+                <p class="review-game-title">〈레드가 죽은 연구소〉</p>
+                <p class="review-text">
+                    <span class="review-highlight">사건의 개연성을 끝까지 유지하려는</span> 작가 안강한의 취향이 선명하게 느껴지는 4인 머더 미스터리입니다.
+                </p>
+                <p class="review-text">
+                    추리가 <span class="review-highlight">'억지로 끼워 맞추는 과정'이 아닌 대화를 나누며 자연스럽게 범위를 좁혀가는 과정</span>으로 설계되어 있었고, 각 단서가 분명한 기능을 가지고 있어 결론에 도달했을 때 <span class="review-highlight">범인이 범인일 수밖에 없는 완결성</span>이 인상적이었습니다.
+                </p>
+                <p class="review-text">
+                    어린 시절 한 번쯤 동경했던 히어로 전대물을 모티브로 삼고 있어 신선했습니다. <span class="review-highlight">새로운 세계관</span>에서 머더 미스터리를 즐기고 싶은 분들께 추천드립니다.
+                </p>
+            </div>
+
+            <div class="review-credits">
+                <p class="review-credits-text">제작</p>
+                <p class="review-credits-names">안강한</p>
+                <p class="review-credits-text" style="margin-top: 16px;">검수</p>
+                <p class="review-credits-names">압필</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
