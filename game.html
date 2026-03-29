@@ -8,7 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Do+Hyeon&family=Noto+Serif+KR:wght@400;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;user-select:none}
 body{background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:'Gowun Dodum',sans-serif;overflow:hidden}
-#game{width:420px;height:720px;position:relative;overflow:hidden;border:2px solid #333;border-radius:8px;background:#0a0a0a}
+#game{width:420px;height:720px;position:relative;overflow:hidden;border:2px solid #333;border-radius:8px;background:#0a0a0a;transform-origin:center center}
 .screen{display:none;width:100%;height:100%;position:absolute;top:0;left:0;flex-direction:column}
 .screen.active{display:flex}
 
@@ -256,6 +256,13 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 @keyframes btShake{0%,100%{transform:translateX(0)}12%{transform:translateX(-8px) translateY(-2px)}25%{transform:translateX(8px) translateY(2px)}37%{transform:translateX(-6px)}50%{transform:translateX(6px)}62%{transform:translateX(-4px)}75%{transform:translateX(4px)}87%{transform:translateX(-2px)}}
 @keyframes btFlash{0%{opacity:0.7}30%{opacity:0.3}50%{opacity:0.6}100%{opacity:0}}
 @keyframes confetti{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(300px) rotate(720deg);opacity:0}}
+.bt-preview{font-family:'Gowun Dodum',sans-serif;font-size:10px;color:#aaa;text-align:center;padding:2px 12px 6px;min-height:16px;line-height:1.5;transition:all 0.2s}
+.bt-preview span{margin:0 4px}
+.bt-preview .pv-dmg{color:#ff6b6b;font-weight:bold}
+.bt-preview .pv-heal{color:#4ecca3;font-weight:bold}
+.bt-preview .pv-sp{color:#64b5f6}
+.bt-preview .pv-buff{color:#ffd700}
+.bt-preview .pv-shield{color:#e0a500}
 .tut-overlay{position:absolute;top:0;left:0;right:0;bottom:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);cursor:pointer;animation:rewardFadeIn 0.3s ease}
 .tut-box{background:linear-gradient(180deg,rgba(20,10,40,0.98),rgba(10,5,20,0.98));border:2px solid #ffd700;border-radius:14px;padding:24px 20px;max-width:340px;width:90%;text-align:center;box-shadow:0 0 30px rgba(255,215,0,0.15)}
 .tut-step{font-family:'Do Hyeon',sans-serif;font-size:11px;color:#ffd700;letter-spacing:3px;margin-bottom:8px}
@@ -480,6 +487,7 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
     </div>
     <div class="bt-status-row" id="bt-status"></div>
     <div class="bt-acts" id="bt-acts"></div>
+    <div class="bt-preview" id="bt-preview"></div>
     <div class="bt-log" id="bt-log"></div>
     <div class="bt-overlay" id="bt-overlay"></div>
     <div class="bt-fx" id="bt-fx"></div>
@@ -514,6 +522,15 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 
 </div>
 <script>
+/* ===== 화면 스케일링 ===== */
+function resizeGame(){
+  var g=document.getElementById('game');
+  var s=Math.min(window.innerHeight/740,window.innerWidth/440)*0.98;
+  if(s>1)g.style.transform='scale('+s+')';
+  else g.style.transform='';
+}
+window.addEventListener('resize',resizeGame);resizeGame();
+
 /* ===== BGM ===== */
 var masterVol=parseFloat(localStorage.getItem('mr_vol')||'0.5');
 var bgmDaily=new Audio('일상.mp3');bgmDaily.loop=true;
@@ -1485,6 +1502,7 @@ function initSelect(){
   var cards=$('sel-cards');clr(cards);
   var info=$('sel-info');info.innerHTML='<div style="color:#666;text-align:center;padding:20px">ACTIVE 레인저를 선택해주세요</div>';
   $('sel-go').style.display='none';
+  $('sel-go').disabled=false;
   $('sel-title').textContent='▼ ACTIVE 레인저 선택 ▼';
   $('sel-step').style.display='none';
   BT.selectedRanger=null;BT.passiveRanger=null;
@@ -1833,6 +1851,62 @@ function showActions(){
     a5.textContent='💫 합체기!';
     a5.addEventListener('click',function(){doPlayerAction('comboAttack')});acts.appendChild(a5);
   }
+  // ── 예상행동 프리뷰 ──
+  var pvEl=$('bt-preview');pvEl.innerHTML='';
+  var critChance=Math.round((p.spd*0.01+0.05+(p.critBonus||0))*100);
+  var spRegen=5+(p.spRegen||0);
+  function setPv(html){pvEl.innerHTML=html}
+  function clearPv(){pvEl.innerHTML=''}
+  var previews={};
+  // 공격 프리뷰
+  var atkPvParts=[];
+  if(BT.guaranteedCrit)atkPvParts.push('<span class="pv-dmg">확정 크리 ~'+Math.round(estAtk*1.5)+'</span>');
+  else if(BT.tacticalGauge>0)atkPvParts.push('<span class="pv-dmg">~'+Math.round(estAtk*(1+BT.tacticalGauge*0.1))+'</span> TG+'+BT.tacticalGauge);
+  else atkPvParts.push('<span class="pv-dmg">~'+estAtk+'</span>');
+  if(!BT.guaranteedCrit)atkPvParts.push('크리 '+critChance+'%');
+  atkPvParts.push('<span class="pv-sp">SP+'+spRegen+'</span>');
+  previews.atk=atkPvParts.join(' · ');
+  // 방어 프리뷰
+  var defSpTotal=Math.min(p.maxSp,p.sp+spRegen+10)-p.sp;
+  var defPvParts=['<span class="pv-shield">🛡+'+shieldPreview+'</span>','<span class="pv-sp">SP+'+defSpTotal+'</span>','<span class="pv-buff">다음 턴 확정 크리</span>'];
+  if(BT.perkGuardHeal)defPvParts.push('<span class="pv-heal">HP+'+Math.round(p.maxHp*0.03)+'</span>');
+  previews.def=defPvParts.join(' · ');
+  // 필살기 프리뷰
+  var sklPvParts=['<span class="pv-dmg">~'+estSkill+'</span>','<span class="pv-sp">SP-'+effectiveCost+'</span>'];
+  if(p.skill.stun)sklPvParts.push('<span class="pv-buff">스턴 '+p.skill.stun+'턴</span>');
+  if(p.skill.heal)sklPvParts.push('<span class="pv-heal">HP+'+Math.round(p.skill.heal*100)+'%</span>');
+  if(p.skill.ignoreDef>0)sklPvParts.push('<span class="pv-buff">방무 '+Math.round(p.skill.ignoreDef*100)+'%</span>');
+  if(p.key==='yellow'&&BT.yellowMarks>=3)sklPvParts.push('<span class="pv-buff">감전 폭발!</span>');
+  else if(p.key==='yellow'&&BT.yellowMarks>=2)sklPvParts.push('<span class="pv-buff">감전 +20%</span>');
+  if(p.key==='red'&&BT.redMomentum>=5)sklPvParts.push('<span class="pv-buff">투지MAX x1.5</span>');
+  if(p.key==='black'&&BT.blackAim>0)sklPvParts.push('<span class="pv-buff">관통'+BT.blackAim+'스택</span>');
+  previews.skill=sklPvParts.join(' · ');
+  // 지원 프리뷰
+  var supPvParts=[];
+  if(BT.supportCD>0)supPvParts.push('쿨타임 '+BT.supportCD+'턴 남음');
+  else{
+    if(sup.type==='buff')supPvParts.push('<span class="pv-buff">'+sup.stat.toUpperCase()+' +'+Math.round(sup.val*100)+'%</span>');
+    else if(sup.type==='heal')supPvParts.push('<span class="pv-heal">HP +'+Math.round(p.maxHp*sup.val)+'</span>');
+    else if(sup.type==='sp')supPvParts.push('<span class="pv-sp">SP +'+sup.val+'</span>');
+    else if(sup.type==='debuff')supPvParts.push('<span class="pv-buff">적 '+sup.stat.toUpperCase()+' -'+Math.round(sup.val*100)+'%</span>');
+    else if(sup.type==='damage'){var estSup=Math.round(calcDmg(p.atk+getBuffVal('atk'),e.def+getDebuffVal('def'),sup.multi,0)*0.9);supPvParts.push('<span class="pv-dmg">~'+estSup+'</span>')}
+  }
+  supPvParts.push('<span class="pv-sp">SP+'+spRegen+'</span>');
+  previews.support=supPvParts.join(' · ');
+  // 합체기 프리뷰
+  if(BT.comboAttackCharged){
+    var estCombo=Math.round(calcDmg((p.atk+getBuffVal('atk'))*2,e.def+getDebuffVal('def'),1.5,0.5)*0.9);
+    previews.combo='<span class="pv-dmg">~'+estCombo+'</span> <span class="pv-buff">방무 50%</span> <span class="pv-sp">SP+'+spRegen+'</span>';
+  }
+  // 이벤트 바인딩
+  function bindPv(btn,key){
+    if(!btn)return;
+    btn.addEventListener('mouseenter',function(){setPv(previews[key])});
+    btn.addEventListener('mouseleave',clearPv);
+    btn.addEventListener('touchstart',function(){setPv(previews[key])},{passive:true});
+  }
+  bindPv(a1,'atk');bindPv(a2,'def');bindPv(a3,'skill');bindPv(a4,'support');
+  if(BT.comboAttackCharged&&a5)bindPv(a5,'combo');
 }
 
 // ── 전투 로그 (히스토리) ──
