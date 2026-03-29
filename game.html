@@ -277,6 +277,8 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 .rw-bg{display:flex;flex-direction:column;align-items:center;animation:rewardFadeIn 0.6s ease}
 .rw-title{font-family:'Do Hyeon',sans-serif;font-size:26px;color:#ffd700;letter-spacing:6px;margin-bottom:6px;text-shadow:0 0 20px rgba(255,215,0,0.5),0 0 40px rgba(255,215,0,0.2),2px 2px 0 #c62828}
 .rw-sub{font-family:'Gowun Dodum',sans-serif;font-size:13px;color:#888;margin-bottom:28px}
+.rw-retreat{font-family:'Do Hyeon',sans-serif;font-size:12px;color:#aaa;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 20px;cursor:pointer;letter-spacing:1px;transition:all 0.2s;margin-top:24px}
+.rw-retreat:hover{color:#4ecca3;border-color:#4ecca3;background:rgba(78,204,163,0.1)}
 .rw-cards{display:flex;gap:14px}
 .rw-card{background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,215,0,0.03));border:2px solid #555;border-radius:14px;padding:22px 14px 18px;width:112px;text-align:center;cursor:pointer;transition:all 0.25s}
 .rw-card:hover{border-color:#ffd700;background:linear-gradient(180deg,rgba(255,215,0,0.15),rgba(255,215,0,0.05));transform:translateY(-6px);box-shadow:0 8px 20px rgba(255,215,0,0.2),0 0 16px rgba(255,215,0,0.1)}
@@ -332,7 +334,7 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 .bt-sicon.tg{background:rgba(102,126,234,0.2);color:#667eea}
 .bt-sicon.heal{background:rgba(236,64,122,0.2);color:#ec407a}
 .bt-sicon.guard{background:rgba(100,181,246,0.2);color:#64b5f6}
-.bt-pending{font-family:'Do Hyeon',sans-serif;font-size:11px;color:#ffd700;position:absolute;top:10px;right:16px;z-index:5;letter-spacing:1px}
+.bt-pending{font-family:'Do Hyeon',sans-serif;font-size:11px;color:#ffd700;position:absolute;top:14px;right:52px;z-index:5;letter-spacing:1px}
 .bt-retreat{font-family:'Do Hyeon',sans-serif;font-size:10px;color:#aaa;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;position:absolute;top:10px;left:16px;z-index:5;cursor:pointer;letter-spacing:1px;transition:all 0.2s}
 .bt-retreat:hover{color:#fff;border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.1)}
 
@@ -526,6 +528,7 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
     <div class="rw-title" id="rw-title">★ 웨이브 클리어 ★</div>
     <div class="rw-sub">보상을 선택하세요</div>
     <div class="rw-cards" id="rw-cards"></div>
+    <button class="rw-retreat" id="rw-retreat" style="display:none">🏳️ 여기서 훈련 종료 (보상 전액 획득)</button>
   </div>
 </div>
 
@@ -1252,24 +1255,24 @@ $('btn-title').addEventListener('click',function(){stopAllBgm();showScr('title')
 // ── 캐릭터 데이터 ──
 var RANGERS={
   red:{name:'레드',color:'#e53935',weapon:'대검',
-    hp:33,atk:18,def:9,spd:10,sp:50,
-    skill:{name:'미라클 슬래시',cost:30,multi:2.5,desc:'공격력 250% 대검 일격',ignoreDef:0},
+    hp:33,atk:15,def:9,spd:10,sp:50,
+    skill:{name:'미라클 슬래시',cost:30,multi:1.8,desc:'공격력 180% 대검 일격',ignoreDef:0},
     support:{name:'리더의 격려',desc:'공격력 +30% (3턴)',type:'buff',stat:'atk',val:0.3,turns:3}},
   black:{name:'블랙',color:'#555',weapon:'총',
-    hp:30,atk:17,def:9,spd:10,sp:50,
-    skill:{name:'풀버스트 샷',cost:30,multi:2.2,desc:'공격력 220% + 방어무시',ignoreDef:1},
-    support:{name:'엄호 사격',desc:'적에게 공격력 150% 데미지',type:'damage',multi:1.5}},
+    hp:30,atk:14,def:9,spd:10,sp:50,
+    skill:{name:'풀버스트 샷',cost:30,multi:1.6,desc:'공격력 160% + 방어무시',ignoreDef:1},
+    support:{name:'엄호 사격',desc:'적에게 공격력 120% 데미지',type:'damage',multi:1.2}},
   blue:{name:'블루',color:'#1565c0',weapon:'검',
-    hp:27,atk:19,def:7,spd:13,sp:50,
-    skill:{name:'소닉 블레이드',cost:35,multi:2.6,desc:'공격력 260% 고속참격',ignoreDef:0},
+    hp:27,atk:16,def:7,spd:13,sp:50,
+    skill:{name:'소닉 블레이드',cost:35,multi:1.9,desc:'공격력 190% 고속참격',ignoreDef:0},
     support:{name:'전술 분석',desc:'적 방어력 -30% (3턴)',type:'debuff',stat:'def',val:0.3,turns:3}},
   yellow:{name:'옐로',color:'#f9a825',weapon:'클로',
-    hp:30,atk:16,def:8,spd:12,sp:50,
-    skill:{name:'썬더 크러쉬',cost:35,multi:2.2,desc:'공격력 220% + 스턴 1턴',stun:1,ignoreDef:0},
-    support:{name:'번개 충전',desc:'SP +25 회복',type:'sp',val:25}},
+    hp:30,atk:13,def:8,spd:12,sp:50,
+    skill:{name:'썬더 크러쉬',cost:35,multi:1.6,desc:'공격력 160% + 스턴 1턴',stun:1,ignoreDef:0},
+    support:{name:'번개 충전',desc:'SP +20 회복',type:'sp',val:20}},
   pink:{name:'핑크',color:'#ec407a',weapon:'채찍',
-    hp:36,atk:14,def:12,spd:10,sp:50,
-    skill:{name:'바인드 위프',cost:30,multi:2.0,desc:'공격력 200% + 쉴드 5% 부여',heal:0.05,ignoreDef:0},
+    hp:36,atk:12,def:12,spd:10,sp:50,
+    skill:{name:'바인드 위프',cost:30,multi:1.5,desc:'공격력 150% + 쉴드 5% 부여',heal:0.05,ignoreDef:0},
     support:{name:'힐링 위프',desc:'체력 20% 회복',type:'heal',val:0.2}}
 };
 
@@ -1313,26 +1316,21 @@ var BOSSES=[
 
 // ── 보상 풀 ──
 var REWARDS=[
-  {name:'체력 회복',desc:'체력 30% 회복',icon:'❤️',fn:function(p){var h=Math.round(p.maxHp*0.3);p.hp=Math.min(p.maxHp,p.hp+h);return '체력 +'+h}},
+  // 1회성 회복
+  {name:'체력 회복',desc:'체력 50% 회복',icon:'❤️',fn:function(p){var h=Math.round(p.maxHp*0.5);p.hp=Math.min(p.maxHp,p.hp+h);return '체력 +'+h}},
   {name:'SP 회복',desc:'SP 전체 회복',icon:'💎',fn:function(p){p.sp=p.maxSp;return 'SP 최대!'}},
+  // 기본 스탯 강화
   {name:'공격력 강화',desc:'공격력 +2',icon:'⚔️',fn:function(p){p.atk+=2;return '공격력 +2'}},
   {name:'쉴드력 강화',desc:'쉴드력 +2',icon:'🛡️',fn:function(p){p.def+=2;return '쉴드력 +2'}},
   {name:'속도 강화',desc:'속도 +1',icon:'💨',fn:function(p){p.spd+=1;return '속도 +1'}},
-  {name:'최대 체력 증가',desc:'최대 체력 +3',icon:'💖',fn:function(p){p.maxHp+=3;p.hp+=3;return '최대 체력 +3'}},
-  {name:'최대 SP 증가',desc:'최대 SP +8',icon:'💠',fn:function(p){p.maxSp+=8;p.sp=Math.min(p.maxSp,p.sp+8);return '최대 SP +8'}},
-  {name:'필살기 강화',desc:'배율 +15%',icon:'🌟',fn:function(p){p.skillBonus=(p.skillBonus||0)+0.15;return '필살기 강화!'}},
-  {name:'긴급 수리',desc:'체력 30% 회복',icon:'🏥',fn:function(p){var h=Math.round(p.maxHp*0.3);p.hp=Math.min(p.maxHp,p.hp+h);return '체력 +'+h},rare:1},
-  {name:'부스터 충전',desc:'공격+1 쉴드력+1 속도+1',icon:'⚡',fn:function(p){p.atk+=1;p.def+=1;p.spd+=1;return '전체 강화!'},rare:1},
-  {name:'합체기 충전',desc:'파트너와 합체공격!',icon:'💫',fn:function(p){BT.comboAttackCharged=true;return '합체기 충전!'},rare:1},
-  {name:'서포터 재배치',desc:'지원 쿨타임 전체 초기화',icon:'🔄',fn:function(p){BT.supportCDs={};return '쿨타임 초기화!'}},
-  {name:'연쇄 번개',desc:'스킬 후 공격력 30% 추가타',icon:'⚡',fn:function(p){BT.perkChainLightning=true;return '연쇄 번개!'},rare:1},
-  {name:'수호의 오라',desc:'방어 시 체력 2% 회복',icon:'🛡️',fn:function(p){BT.perkGuardHeal=true;return '수호의 오라!'},rare:1},
-  {name:'전술 천재',desc:'전술 게이지 최소 1 보장',icon:'🧠',fn:function(p){BT.perkTgMin=true;return '전술 천재!'},rare:1},
-  {name:'분노의 일격',desc:'체력 30% 이하 시 +30%',icon:'💢',fn:function(p){BT.perkRage=true;return '분노의 일격!'},rare:1},
-  {name:'이중 지원',desc:'다음 서포트 효과 2배',icon:'👥',fn:function(p){BT.perkDoubleSupport=true;BT.perkDoubleSupportUsed=false;return '이중 지원!'},rare:1},
+  {name:'최대 체력 증가',desc:'최대 체력 +5',icon:'💖',fn:function(p){p.maxHp+=5;p.hp+=5;return '최대 체력 +5'}},
+  {name:'최대 SP 증가',desc:'최대 SP +10',icon:'💠',fn:function(p){p.maxSp+=10;p.sp=Math.min(p.maxSp,p.sp+10);return '최대 SP +10'}},
+  {name:'필살기 강화',desc:'스킬 배율 +15%',icon:'🌟',fn:function(p){p.skillBonus=(p.skillBonus||0)+0.15;return '필살기 강화!'}},
+  // 희귀 — 세부 스탯
+  {name:'전체 강화',desc:'공격+1 쉴드력+1 속도+1',icon:'⚡',fn:function(p){p.atk+=1;p.def+=1;p.spd+=1;return '전체 +1!'},rare:1},
   {name:'강화 장갑',desc:'받는 피해 -5%',icon:'🔰',fn:function(p){BT.perkDmgReduce=Math.min(0.50,BT.perkDmgReduce+0.05);return '피해 감소 +5%! (총 '+Math.round(BT.perkDmgReduce*100)+'%)'},rare:1},
-  {name:'치명타 증폭',desc:'치명타 데미지 +15%',icon:'💥',fn:function(p){BT.perkCritDmg+=0.15;return '치명타 데미지 UP! (x'+(1.5+BT.perkCritDmg).toFixed(2)+')'},rare:1},
-  {name:'쉴드 강화',desc:'쉴드 생성량 +15%',icon:'🛡️',fn:function(p){BT.perkShieldUp+=0.15;return '쉴드 생성량 +15%! (총 +'+Math.round(BT.perkShieldUp*100)+'%)'}},
+  {name:'치명타 증폭',desc:'치명타 데미지 +15%',icon:'💥',fn:function(p){BT.perkCritDmg+=0.15;return '크리 데미지 UP! (x'+(1.5+BT.perkCritDmg).toFixed(2)+')'},rare:1},
+  {name:'쉴드 강화',desc:'쉴드 생성량 +15%',icon:'🛡️',fn:function(p){BT.perkShieldUp+=0.15;return '쉴드량 +15%! (총 +'+Math.round(BT.perkShieldUp*100)+'%)'},rare:1},
   {name:'파괴자',desc:'주는 피해 +5%',icon:'⚔️',fn:function(p){BT.perkDmgUp+=0.05;return '피해량 +5%! (총 +'+Math.round(BT.perkDmgUp*100)+'%)'},rare:1},
   {name:'관통탄',desc:'방어력 무시 +10%',icon:'🎯',fn:function(p){BT.perkArmorPen=Math.min(1,BT.perkArmorPen+0.10);return '관통 +10%! (총 '+Math.round(BT.perkArmorPen*100)+'%)'},rare:1}
 ];
@@ -1358,23 +1356,20 @@ var PASSIVE_BUFFS={
 
 // ── 미니 보상 풀 ──
 var MINI_REWARDS=[
-  {name:'체력 30% 회복',icon:'❤️',desc:'체력을 30% 회복',fn:function(p){var h=Math.round(p.maxHp*0.30);p.hp=Math.min(p.maxHp,p.hp+h);return '체력 +'+h}},
-  {name:'SP 50% 회복',icon:'💎',desc:'SP 50% 회복',fn:function(p){var s=Math.round(p.maxSp*0.5);p.sp=Math.min(p.maxSp,p.sp+s);return 'SP +'+s}},
-  {name:'공격력 +1',icon:'⚔️',desc:'이번 훈련 공격력 +1',fn:function(p){p.atk+=1;return '공격력 +1'}},
-  {name:'쉴드력 +1',icon:'🛡️',desc:'이번 훈련 쉴드력 +1',fn:function(p){p.def+=1;return '쉴드력 +1'}},
-  {name:'속도 +1',icon:'💨',desc:'이번 훈련 속도 +1',fn:function(p){p.spd+=1;return '속도 +1'}},
-  {name:'흡혈 강타',icon:'🩸',desc:'공격 시 체력 2% 흡수',fn:function(p){BT.perkVamp=Math.min(0.06,BT.perkVamp+0.02);return '흡혈 강타!'}},
-  {name:'카운터 강화',icon:'🔄',desc:'반격 데미지 증가',fn:function(p){BT.perkCounterUp=true;return '카운터 강화!'}},
-  {name:'전술 부스트',icon:'📊',desc:'전술 보너스 +5%',fn:function(p){BT.perkTgBoost+=0.05;return '전술 부스트!'}},
-  {name:'회피 본능',icon:'💫',desc:'회피율 +2%',fn:function(p){BT.perkDodge+=0.02;return '회피율 UP!'}},
-  {name:'SP 오버플로',icon:'🔋',desc:'SP 만충 시 공격+8%',fn:function(p){BT.perkSpOverflow+=0.08;return 'SP 오버플로!'}},
-  {name:'가시 방어',icon:'🌵',desc:'매턴 적에게 2 데미지',fn:function(p){BT.perkThorns+=2;return '가시 방어!'}},
-  {name:'기선제압',icon:'⚡',desc:'웨이브 첫 공격 +15%',fn:function(p){BT.perkFirstStrike+=0.15;return '기선제압!'},rare:1},
-  {name:'보호막 코팅',icon:'🔰',desc:'받는 피해 -3%',fn:function(p){BT.perkDmgReduce=Math.min(0.50,BT.perkDmgReduce+0.03);return '피해 감소 +3%! (총 '+Math.round(BT.perkDmgReduce*100)+'%)'}},
-  {name:'집중력',icon:'🎯',desc:'치명타 확률 +3%',fn:function(p){BT.perkCritChance+=0.03;return '치명타 확률 UP! (총 +'+Math.round(BT.perkCritChance*100)+'%)'}},
-  {name:'쉴드 보강',icon:'🛡️',desc:'쉴드 생성량 +10%',fn:function(p){BT.perkShieldUp+=0.10;return '쉴드량 +10%! (총 +'+Math.round(BT.perkShieldUp*100)+'%)'}},
-  {name:'관통력 강화',icon:'🎯',desc:'방어력 무시 +5%',fn:function(p){BT.perkArmorPen=Math.min(1,BT.perkArmorPen+0.05);return '관통 +5%!'}},
-  {name:'급소 공략',icon:'💥',desc:'치명타 데미지 +10%',fn:function(p){BT.perkCritDmg+=0.10;return '치명타 데미지 UP!'}}
+  // 1회성 회복
+  {name:'체력 회복',icon:'❤️',desc:'체력 30% 회복',fn:function(p){var h=Math.round(p.maxHp*0.30);p.hp=Math.min(p.maxHp,p.hp+h);return '체력 +'+h}},
+  {name:'SP 회복',icon:'💎',desc:'SP 30% 회복',fn:function(p){var s=Math.round(p.maxSp*0.3);p.sp=Math.min(p.maxSp,p.sp+s);return 'SP +'+s}},
+  // 스탯 +1
+  {name:'공격력 +1',icon:'⚔️',desc:'공격력 +1',fn:function(p){p.atk+=1;return '공격력 +1'}},
+  {name:'쉴드력 +1',icon:'🛡️',desc:'쉴드력 +1',fn:function(p){p.def+=1;return '쉴드력 +1'}},
+  {name:'속도 +1',icon:'💨',desc:'속도 +1',fn:function(p){p.spd+=1;return '속도 +1'}},
+  {name:'최대 체력 +2',icon:'💖',desc:'최대 체력 +2',fn:function(p){p.maxHp+=2;p.hp+=2;return '최대 체력 +2'}},
+  // 세부 스탯
+  {name:'피해 감소',icon:'🔰',desc:'받는 피해 -3%',fn:function(p){BT.perkDmgReduce=Math.min(0.50,BT.perkDmgReduce+0.03);return '피해 감소 +3%!'}},
+  {name:'치명타 확률',icon:'🎯',desc:'치명타 확률 +3%',fn:function(p){BT.perkCritChance+=0.03;return '크리 확률 +3%!'}},
+  {name:'쉴드 보강',icon:'🛡️',desc:'쉴드 생성량 +8%',fn:function(p){BT.perkShieldUp+=0.08;return '쉴드량 +8%!'}},
+  {name:'관통력',icon:'🎯',desc:'방어력 무시 +5%',fn:function(p){BT.perkArmorPen=Math.min(1,BT.perkArmorPen+0.05);return '관통 +5%!'}},
+  {name:'크리 데미지',icon:'💥',desc:'치명타 데미지 +8%',fn:function(p){BT.perkCritDmg+=0.08;return '크리 데미지 +8%!'}}
 ];
 
 // ── 전투 상태 ──
@@ -1557,9 +1552,9 @@ function generateEnemy(wave){
   } else {
     template=MOBS[Math.floor(Math.random()*MOBS.length)];
   }
-  var baseHp=isBoss?(27+cycle*10):(14+cycle*5);
-  var baseAtk=isBoss?(5+cycle*2):(4+cycle*2);
-  var baseDef=isBoss?(2+cycle*1):(1+cycle*1);
+  var baseHp=isBoss?(60+cycle*16):(30+cycle*10);
+  var baseAtk=isBoss?(7+cycle*3):(5+cycle*2);
+  var baseDef=isBoss?(3+cycle*2):(2+cycle*1);
   // 지수 스케일링 (사이클 3 이후)
   // 완만한 스케일링: 사이클 4부터 3%씩, DEF는 2%씩 (최대 +30%)
   if(cycle>3){var m=1+Math.min((cycle-3)*0.03,0.30);baseHp=Math.round(baseHp*m);baseAtk=Math.round(baseAtk*m);baseDef=Math.round(baseDef*(1+Math.min((cycle-3)*0.02,0.30)))}
@@ -1772,7 +1767,6 @@ function nextWave(){
     // 핑크 패시브: 웨이브 클리어 시 추가 10% 회복
     if(BT.passiveKey==='pink')healPct+=0.10;
     BT.player.hp=Math.min(BT.player.maxHp,BT.player.hp+Math.round(BT.player.maxHp*healPct));
-    BT.player.sp=Math.min(BT.player.maxSp,BT.player.sp+15);
   }
   BT.enemy=generateEnemy(BT.wave);
   BT.shield=0;BT.focusCD=0;BT.stunTurns=0;BT.poisonTurns=0;BT.poisonDmg=0;BT.burnDmg=0;BT.burnTurns=0;BT.enemyTelegraph=false;
@@ -2742,6 +2736,12 @@ function showReward(){
     });
     cards.appendChild(card);
   });
+  // 훈련 종료 버튼 (웨이브 2 이상)
+  var retreatBtn=$('rw-retreat');
+  if(BT.wave>=2){
+    retreatBtn.style.display='block';
+    retreatBtn.onclick=function(){retreatBattle()};
+  } else {retreatBtn.style.display='none'}
   showScr('reward');
   },1200);// 보스 클리어 연출 딜레이
 }
@@ -2766,6 +2766,14 @@ function showMiniReward(callback){
     });
     box.appendChild(card);
   });
+  // 훈련 종료 버튼 (웨이브 2 이상)
+  if(BT.wave>=2){
+    var retBtn=document.createElement('button');retBtn.className='rw-retreat';
+    retBtn.textContent='🏳️ 훈련 종료 (보상 전액 획득)';
+    retBtn.style.marginTop='16px';
+    retBtn.addEventListener('click',function(){overlay.remove();retreatBattle()});
+    box.appendChild(retBtn);
+  }
   overlay.appendChild(box);$('bt-bg').appendChild(overlay);
 }
 
