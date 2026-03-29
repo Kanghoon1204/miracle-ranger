@@ -342,12 +342,22 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 .lab-currency span{padding:4px 14px;border-radius:16px;letter-spacing:1px}
 .lab-cur-mp{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);color:#ffd700}
 .lab-cur-ce{background:rgba(149,117,205,0.08);border:1px solid rgba(149,117,205,0.2);color:#ce93d8}
+.vol-wrap{position:absolute;top:10px;right:10px;z-index:30;display:flex;align-items:center;gap:6px}
+.vol-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:2px;opacity:0.7;transition:opacity 0.2s}
+.vol-btn:hover{opacity:1}
+.vol-slider{-webkit-appearance:none;appearance:none;width:80px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;outline:none;cursor:pointer}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;background:#ffd700;border-radius:50%;cursor:pointer;border:none}
+.vol-slider::-moz-range-thumb{width:14px;height:14px;background:#ffd700;border-radius:50%;cursor:pointer;border:none}
 .lab-reset{font-family:'Do Hyeon',sans-serif;font-size:11px;color:#c62828;background:none;border:1px solid rgba(198,40,40,0.3);border-radius:6px;padding:5px 12px;cursor:pointer;letter-spacing:1px;transition:all 0.2s;margin-top:8px}
 .lab-reset:hover{background:rgba(198,40,40,0.15);border-color:#c62828}
 </style>
 </head>
 <body>
 <div id="game">
+<div class="vol-wrap" id="vol-wrap">
+  <button class="vol-btn" id="vol-btn">🔊</button>
+  <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="50">
+</div>
 
 <div id="title-screen" class="screen active">
   <div class="city-sil">
@@ -494,24 +504,45 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 </div>
 <script>
 /* ===== BGM ===== */
-var bgmDaily=new Audio('일상.mp3');bgmDaily.loop=true;bgmDaily.volume=0.4;
-var bgmBattle=new Audio('전투.mp3');bgmBattle.loop=false;bgmBattle.volume=0.5;
-var bgmBattle2=new Audio('두번째 전투.mp3');bgmBattle2.loop=true;bgmBattle2.volume=0.5;
+var masterVol=parseFloat(localStorage.getItem('mr_vol')||'0.5');
+var bgmDaily=new Audio('일상.mp3');bgmDaily.loop=true;
+var bgmBattle=new Audio('전투.mp3');bgmBattle.loop=false;
+var bgmBattle2=new Audio('두번째 전투.mp3');bgmBattle2.loop=true;
+var bgmBaseVol={daily:0.4,battle:0.5,battle2:0.5};
+function applyVol(a,base){a.volume=Math.min(1,base*masterVol/0.5)}
 var curBgm=null,bgmTimer=null;
 function playBgm(which){
   if(curBgm===which)return;
   if(bgmTimer){clearTimeout(bgmTimer);bgmTimer=null}
   fadeBgm(bgmDaily);fadeBgm(bgmBattle);fadeBgm(bgmBattle2);
   curBgm=which;
-  if(which==='daily'){bgmDaily.currentTime=0;bgmDaily.volume=0.4;bgmDaily.play().catch(function(){});}
+  if(which==='daily'){bgmDaily.currentTime=0;applyVol(bgmDaily,bgmBaseVol.daily);bgmDaily.play().catch(function(){});}
   else if(which==='battle'){
-    bgmBattle.currentTime=0;bgmBattle.volume=0.5;bgmBattle.play().catch(function(){});
+    bgmBattle.currentTime=0;applyVol(bgmBattle,bgmBaseVol.battle);bgmBattle.play().catch(function(){});
     bgmTimer=setTimeout(function(){fadeBgm(bgmBattle);curBgm=null},90000);
   }
   else if(which==='battle2'){
-    bgmBattle2.currentTime=0;bgmBattle2.volume=0.5;bgmBattle2.play().catch(function(){});
+    bgmBattle2.currentTime=0;applyVol(bgmBattle2,bgmBaseVol.battle2);bgmBattle2.play().catch(function(){});
   }
 }
+// 볼륨 슬라이더 초기화
+(function(){
+  var slider=$('vol-slider');var btn=$('vol-btn');
+  slider.value=Math.round(masterVol*100);
+  btn.textContent=masterVol<=0?'🔇':masterVol<0.3?'🔈':'🔊';
+  slider.addEventListener('input',function(){
+    masterVol=parseInt(this.value)/100;
+    localStorage.setItem('mr_vol',String(masterVol));
+    btn.textContent=masterVol<=0?'🔇':masterVol<0.3?'🔈':'🔊';
+    [bgmDaily,bgmBattle,bgmBattle2].forEach(function(a){if(!a.paused){var base=a===bgmDaily?bgmBaseVol.daily:a===bgmBattle?bgmBaseVol.battle:bgmBaseVol.battle2;applyVol(a,base)}});
+  });
+  btn.addEventListener('click',function(){
+    if(masterVol>0){masterVol=0;slider.value=0}else{masterVol=0.5;slider.value=50}
+    localStorage.setItem('mr_vol',String(masterVol));
+    btn.textContent=masterVol<=0?'🔇':'🔊';
+    [bgmDaily,bgmBattle,bgmBattle2].forEach(function(a){if(!a.paused){var base=a===bgmDaily?bgmBaseVol.daily:a===bgmBattle?bgmBaseVol.battle:bgmBaseVol.battle2;applyVol(a,base)}});
+  });
+})()
 var fadeTimers=[];
 function fadeBgm(a,target){
   if(a.paused)return;
@@ -520,12 +551,10 @@ function fadeBgm(a,target){
   fadeTimers.push(iv);
 }
 function lowerBgm(){
-  // 전투 중 보상 화면 등에서 볼륨만 낮춤 (끊지 않음)
-  if(!bgmBattle2.paused)bgmBattle2.volume=0.15;
+  if(!bgmBattle2.paused)applyVol(bgmBattle2,0.15);
 }
 function restoreBgm(){
-  // 볼륨 복원 (끊지 않고 이어서)
-  if(!bgmBattle2.paused){bgmBattle2.volume=0.5;curBgm='battle2'}
+  if(!bgmBattle2.paused){applyVol(bgmBattle2,bgmBaseVol.battle2);curBgm='battle2'}
   else playBgm('battle2');
 }
 function stopAllBgm(){fadeTimers.forEach(clearInterval);fadeTimers=[];fadeBgm(bgmDaily);fadeBgm(bgmBattle);fadeBgm(bgmBattle2);curBgm=null;if(bgmTimer){clearTimeout(bgmTimer);bgmTimer=null}}
