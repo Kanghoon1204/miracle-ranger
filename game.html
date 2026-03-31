@@ -69,6 +69,11 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 .rw.talk{transform:scale(1.12);filter:drop-shadow(0 4px 20px rgba(255,255,255,0.2)) drop-shadow(0 0 12px rgba(255,215,0,0.15))}
 .rw.enter{animation:enterUp 0.5s ease}
 
+.scene-cg{position:absolute;top:0;left:0;right:0;bottom:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);cursor:pointer;animation:cgFadeIn 0.8s ease}
+.scene-cg img{max-width:92%;max-height:55%;border-radius:8px;box-shadow:0 6px 32px rgba(0,0,0,0.5);object-fit:contain;animation:cgZoom 0.8s ease}
+.scene-cg .cg-hint{position:absolute;bottom:12px;right:16px;font-family:'Do Hyeon',sans-serif;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:2px;animation:blink 1.5s ease-in-out infinite}
+@keyframes cgFadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes cgZoom{0%{transform:scale(0.92);opacity:0}100%{transform:scale(1);opacity:1}}
 .sfx-area{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;z-index:5;pointer-events:none}
 .sfx-t{font-family:'Do Hyeon',sans-serif;font-size:78px;color:#e53935;text-shadow:5px 5px 0 #ffd600,10px 10px 0 #ff9800,15px 15px 0 rgba(0,0,0,0.1);transform:skewX(-7deg) rotate(-2deg);animation:sfxPop 0.5s cubic-bezier(0.34,1.56,0.64,1);-webkit-text-stroke:1px #b71c1c;paint-order:stroke fill;filter:drop-shadow(0 0 10px rgba(229,57,53,0.3))}
 .sfx-t.dark{color:#c62828;text-shadow:3px 3px 0 #000,0 0 40px rgba(198,40,40,0.5);font-size:56px;transform:skewX(-5deg) rotate(0deg);-webkit-text-stroke:0;filter:none}
@@ -731,7 +736,7 @@ function mkD(sc){
   s.appendChild(se('line',{x1:'37',y1:'60',x2:'37',y2:'64',stroke:'#1565c0','stroke-width':'1.5'}));
   return s;
 }
-function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else w.appendChild(mkR(t,sc));return w}
+function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},sc||1.4));w.style.filter='drop-shadow(0 0 16px rgba(123,31,162,0.6))'}else w.appendChild(mkR(t,sc));return w}
 
 /* ===== 에피소드: "기적의 이름으로" ===== */
 var S=[
@@ -785,7 +790,7 @@ var S=[
 {t:'sfx',v:'쿠우웅!'},
 {t:'fx',v:'shake'},
 {t:'d',sp:'카오스',cl:'#ce93d8',tx:'"나와라.\n다크 타이탄."',ch:['chaos'],lo:'right',tk:'chaos'},
-{t:'n',tx:'모니터 화면이 일그러질 정도의 충격파.\n땅이 갈라지며 거대한 괴인이 나타났다.\n\n...이건 좀 다르다.'},
+{t:'n',tx:'모니터 화면이 일그러질 정도의 충격파.\n땅이 갈라지며 거대한 괴인이 나타났다.\n\n...이건 좀 다르다.',ch:['titan'],lo:'right',en:true},
 {t:'d',sp:'블루',cl:'#42a5f5',tx:'"야, 이건 좀 다른데?\n에너지 수치가 완전 비정상이야."',ch:['blue'],lo:'left',tk:'blue'},
 {t:'n',tx:'모니터 너머로도\n블루의 긴장감이 전해졌다.'},
 {t:'d',sp:'레드',cl:'#e53935',tx:'"상관없다.\n할 일은 변하지 않아.\n전투 개시!"',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
@@ -805,7 +810,7 @@ var S=[
 {t:'pause',ms:250},
 {t:'fx',v:'flash-white'},
 {t:'sfx',v:'팡!'},
-{t:'n',tx:'블랙의 정확한 사격이\n괴인에게 명중했다.\n\n...흠집 하나 나지 않았다.\n모니터를 두 번 확인했다. 진짜였다.'},
+{t:'n',tx:'블랙의 정확한 사격이\n괴인에게 명중했다.\n\n...흠집 하나 나지 않았다.\n모니터를 두 번 확인했다. 진짜였다.',ch:['titan'],lo:'right'},
 {t:'d',sp:'블랙',cl:'#999',tx:'"...안 통해."',ch:['black'],lo:'left',tk:'black'},
 {t:'pause',ms:350},
 {t:'sfx',v:'쿵!!'},
@@ -826,7 +831,7 @@ var S=[
 {t:'fx',v:'flash-white'},
 {t:'sfx',v:'슈아앗!'},
 {t:'n',tx:'옐로의 번개가 괴인을 감쌌다.\n하지만—'},
-{t:'n',tx:'다크 타이탄이 번개를\n맨손으로 흩어버렸다.\n\n말이 안 된다.\n옐로의 썬더 크러쉬가 막힌 건 처음이다.'},
+{t:'n',tx:'다크 타이탄이 번개를\n맨손으로 흩어버렸다.\n\n말이 안 된다.\n옐로의 썬더 크러쉬가 막힌 건 처음이다.',ch:['titan'],lo:'right'},
 {t:'d',sp:'핑크',cl:'#f48fb1',tx:'"거짓말?!\n썬더 크러쉬가 안 먹혀?!"',ch:['pink'],lo:'left',tk:'pink'},
 {t:'d',sp:'카오스',cl:'#ce93d8',tx:'"...안 통한다."',ch:['chaos'],lo:'right',tk:'chaos'},
 {t:'sfx',v:'퍽!!'},
@@ -845,13 +850,13 @@ var S=[
 {t:'sfx',v:'슈아아앗!!'},
 {t:'pause',ms:500},
 {t:'n',tx:'레드의 대검이 괴인의 가슴팍에\n꽂혔다.\n\n...그런 줄 알았다.'},
-{t:'n',tx:'다크 타이탄이 대검을\n맨손으로 잡아 멈춰 세웠다.'},
+{t:'n',tx:'다크 타이탄이 대검을\n맨손으로 잡아 멈춰 세웠다.',ch:['titan'],lo:'right'},
 {t:'d',sp:'레드',cl:'#e53935',tx:'"...!"',ch:['red'],lo:'left',tk:'red'},
 {t:'pause',ms:300},
 {t:'sfx',v:'쾅!!'},
 {t:'fx',v:'shake'},
 {t:'bh',eHp:90,tHp:10},
-{t:'n',tx:'다크 타이탄의 일격.\n레인저 전원이 쓰러졌다.\n\n숨이 멎는 것 같았다.'},
+{t:'n',tx:'다크 타이탄의 일격.\n레인저 전원이 쓰러졌다.\n\n숨이 멎는 것 같았다.',ch:['titan'],lo:'right'},
 {t:'d',sp:'카오스',cl:'#ce93d8',tx:'"끝이다.\n더는 일어나지 못할 거다."',ch:['chaos'],lo:'right',tk:'chaos'},
 {t:'n',tx:'모니터 속 다섯 명이\n일어서지 못하고 있었다.\n\n손이 떨렸다.',ch:['red','black','blue','yellow','pink'],lo:'spread'},
 {t:'d',sp:'블루',cl:'#42a5f5',tx:'"...야, 이거 진짜 좀 위험한데."',ch:['blue'],lo:'left',tk:'blue'},
@@ -915,7 +920,7 @@ var S=[
 {t:'fx',v:'flash-white'},
 {t:'sfx',v:'팡팡팡!'},
 {t:'fx',v:'shake'},
-{t:'n',tx:'블랙의 강화된 사격이\n다크 타이탄의 장갑을 관통했다!\n\n통했다...!'},
+{t:'n',tx:'블랙의 강화된 사격이\n다크 타이탄의 장갑을 관통했다!\n\n통했다...!',ch:['titan'],lo:'right'},
 {t:'bh',eHp:65,tHp:100},
 {t:'d',sp:'카오스',cl:'#ce93d8',tx:'"뭐, 뭐?!"',ch:['chaos'],lo:'right',tk:'chaos'},
 {t:'d',sp:'블루',cl:'#42a5f5',tx:'"자, 내 차례다?"',ch:['blue'],lo:'left',tk:'blue'},
@@ -930,7 +935,7 @@ var S=[
 {t:'fx',v:'flash-white'},
 {t:'sfx',v:'쾌쾌쾌광!'},
 {t:'fx',v:'shake'},
-{t:'n',tx:'강화된 번개가 하늘에서 내리꽂혔다!\n아까 막히던 그 기술이, 지금은 관통한다.\n\n다크 타이탄이 처음으로 비명을 질렀다!'},
+{t:'n',tx:'강화된 번개가 하늘에서 내리꽂혔다!\n아까 막히던 그 기술이, 지금은 관통한다.\n\n다크 타이탄이 처음으로 비명을 질렀다!',ch:['titan'],lo:'right'},
 {t:'bh',eHp:25,tHp:100},
 {t:'d',sp:'핑크',cl:'#f48fb1',tx:'"묶어둘게!!\n레드, 지금이야!!"',ch:['pink','red'],lo:'sides',tk:'pink'},
 {t:'pause',ms:200},
@@ -1099,6 +1104,7 @@ function run(){
   if(tp==='ch')doChapter(s);
   else if(tp==='bg'){$('sbg').className='scene-bg bg-'+s.v;var dk=s.v==='night'||s.v==='battle'||s.v==='lab-ev';$('dlg').classList.toggle('dark',dk);if(s.v==='battle')playBgm('battle');else if(s.v==='night')stopAllBgm();else if(curBgm!=='daily')playBgm('daily');idx++;run()}
   else if(tp==='border'){$('dlg').classList.toggle('red-border',s.v==='red');idx++;run()}
+  else if(tp==='img')doImg(s);
   else if(tp==='sfx')doSfx(s);
   else if(tp==='n')doNarr(s);
   else if(tp==='d')doDialog(s);
@@ -1123,6 +1129,21 @@ function doChapter(s){
   c.classList.add('on');
   chapterTimer=setTimeout(function(){chapterTimer=null;c.classList.remove('on');idx++;busy=false;run()},2200);
   c.onclick=function(){if(chapterTimer){skipChapter();c.onclick=null}};
+}
+function doImg(s){
+  showScr('scene');clr($('sfx'));hideDrama();
+  var wrap=document.createElement('div');wrap.className='scene-cg';
+  var img=document.createElement('img');img.src=s.src;wrap.appendChild(img);
+  var hint=document.createElement('div');hint.className='cg-hint';hint.textContent='▼ 터치';wrap.appendChild(hint);
+  $('sbg').appendChild(wrap);
+  $('spk').textContent='';$('dtxt').textContent='';
+  $('dnext').style.display='none';$('chArea').style.display='none';
+  busy=true;
+  wrap.addEventListener('click',function(){
+    wrap.style.opacity='0';wrap.style.transition='opacity 0.5s';
+    setTimeout(function(){if(wrap.parentNode)wrap.parentNode.removeChild(wrap)},500);
+    busy=false;idx++;run();
+  });
 }
 function doSfx(s){
   showScr('scene');var area=$('sfx');clr(area);hideDrama();
