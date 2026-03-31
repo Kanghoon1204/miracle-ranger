@@ -1287,23 +1287,23 @@ $('btn-title').addEventListener('click',function(){stopAllBgm();showScr('title')
 // ── 캐릭터 데이터 ──
 var RANGERS={
   red:{name:'레드',color:'#e53935',weapon:'대검',
-    hp:33,atk:15,def:9,spd:10,sp:50,
+    hp:33,atk:15,def:9,crit:15,dodge:8,sp:50,
     skill:{name:'미라클 슬래시',cost:30,multi:1.8,desc:'공격력 180% 대검 일격',ignoreDef:0},
     support:{name:'리더의 격려',desc:'공격력 +30% (3턴)',type:'buff',stat:'atk',val:0.3,turns:3}},
   black:{name:'블랙',color:'#555',weapon:'총',
-    hp:30,atk:14,def:9,spd:10,sp:50,
+    hp:30,atk:14,def:9,crit:15,dodge:8,sp:50,
     skill:{name:'풀버스트 샷',cost:30,multi:1.6,desc:'공격력 160% + 방어무시',ignoreDef:1},
     support:{name:'엄호 사격',desc:'적에게 공격력 120% 데미지',type:'damage',multi:1.2}},
   blue:{name:'블루',color:'#1565c0',weapon:'검',
-    hp:27,atk:16,def:7,spd:13,sp:50,
+    hp:27,atk:16,def:7,crit:20,dodge:10,sp:50,
     skill:{name:'소닉 블레이드',cost:35,multi:1.9,desc:'공격력 190% 고속참격',ignoreDef:0},
     support:{name:'전술 분석',desc:'적 방어력 -30% (3턴)',type:'debuff',stat:'def',val:0.3,turns:3}},
   yellow:{name:'옐로',color:'#f9a825',weapon:'클로',
-    hp:30,atk:13,def:8,spd:12,sp:50,
+    hp:30,atk:13,def:8,crit:17,dodge:9,sp:50,
     skill:{name:'썬더 크러쉬',cost:35,multi:1.6,desc:'공격력 160% + 스턴 1턴',stun:1,ignoreDef:0},
     support:{name:'번개 충전',desc:'SP +20 회복',type:'sp',val:20}},
   pink:{name:'핑크',color:'#ec407a',weapon:'채찍',
-    hp:36,atk:12,def:12,spd:10,sp:50,
+    hp:36,atk:12,def:12,crit:12,dodge:10,sp:50,
     skill:{name:'바인드 위프',cost:30,multi:1.5,desc:'공격력 150% + 쉴드 5% 부여',heal:0.05,ignoreDef:0},
     support:{name:'힐링 위프',desc:'체력 20% 회복',type:'heal',val:0.2}}
 };
@@ -1354,7 +1354,8 @@ var REWARDS=[
   // 기본 스탯 강화
   {name:'공격력 강화',desc:'공격력 +2',icon:'⚔️',fn:function(p){p.atk+=2;return '공격력 +2'}},
   {name:'쉴드력 강화',desc:'쉴드력 +2',icon:'🛡️',fn:function(p){p.def+=2;return '쉴드력 +2'}},
-  {name:'속도 강화',desc:'속도 +1',icon:'💨',fn:function(p){p.spd+=1;return '속도 +1'}},
+  {name:'크리확률 강화',desc:'크리확률 +2%',icon:'💥',fn:function(p){p.crit+=2;return '크리확률 +2%'}},
+  {name:'회피확률 강화',desc:'회피확률 +2%',icon:'💨',fn:function(p){p.dodge+=2;return '회피확률 +2%'}},
   {name:'최대 체력 증가',desc:'최대 체력 +5',icon:'💖',fn:function(p){p.maxHp+=5;p.hp+=5;return '최대 체력 +5'}},
   {name:'최대 SP 증가',desc:'최대 SP +10',icon:'💠',fn:function(p){p.maxSp+=10;p.sp=Math.min(p.maxSp,p.sp+10);return '최대 SP +10'}},
   {name:'필살기 강화',desc:'스킬 배율 +15%',icon:'🌟',fn:function(p){p.skillBonus=(p.skillBonus||0)+0.15;return '필살기 강화!'}},
@@ -1363,7 +1364,7 @@ var REWARDS=[
   {name:'체력 단련',desc:'최대 체력 +10%',icon:'💖',fn:function(p){var add=Math.max(2,Math.round(p.maxHp*0.10));p.maxHp+=add;p.hp+=add;return '최대 체력 +'+add+' (+10%)'}},
   {name:'쉴드 연마',desc:'쉴드력 +10%',icon:'🛡️',fn:function(p){var add=Math.max(1,Math.round(p.def*0.10));p.def+=add;return '쉴드력 +'+add+' (+10%)'}},
   // 희귀 — 세부 스탯
-  {name:'전체 강화',desc:'공격+1 쉴드력+1 속도+1',icon:'⚡',fn:function(p){p.atk+=1;p.def+=1;p.spd+=1;return '전체 +1!'},rare:1},
+  {name:'전체 강화',desc:'공격+1 쉴드력+1 크리+2%',icon:'⚡',fn:function(p){p.atk+=1;p.def+=1;p.crit+=2;return '전체 강화!'},rare:1},
   {name:'강화 장갑',desc:'받는 피해 -5%',icon:'🔰',fn:function(p){BT.perkDmgReduce=Math.min(0.50,BT.perkDmgReduce+0.05);return '피해 감소 +5%! (총 '+Math.round(BT.perkDmgReduce*100)+'%)'},rare:1},
   {name:'치명타 증폭',desc:'치명타 데미지 +15% (수확체감)',icon:'💥',fn:function(p){var add=0.15*Math.max(0.3,1-BT.perkCritDmg);BT.perkCritDmg+=add;return '크리 데미지 +'+Math.round(add*100)+'%! (x'+(1.5+BT.perkCritDmg).toFixed(2)+')'},rare:1},
   {name:'쉴드 강화',desc:'쉴드 생성량 +15%',icon:'🛡️',fn:function(p){BT.perkShieldUp+=0.15;return '쉴드량 +15%! (총 +'+Math.round(BT.perkShieldUp*100)+'%)'},rare:1},
@@ -1379,8 +1380,8 @@ var PASSIVE_BUFFS={
   black:{name:'사수의 눈',desc:'관통 시작 +20%, 공격력 +10%',icon:'🎯',
     apply:function(p){p.defIgnore=0.10;p.atk=Math.round(p.atk*1.10)},
     skillDesc:'스킬이 방어력 30% 추가 무시'},
-  blue:{name:'전술의 눈',desc:'크리율 +6%, 속도 +10%',icon:'🎯',
-    apply:function(p){p.spd=Math.round(p.spd*1.10);p.critBonus=0.06},
+  blue:{name:'전술의 눈',desc:'크리확률 +8%, 회피확률 +5%',icon:'🎯',
+    apply:function(p){p.crit+=8;p.dodge+=5;p.critBonus=0},
     skillDesc:'스킬 크리티컬 +8%'},
   yellow:{name:'번개의 에너지',desc:'매턴 SP+2, 스킬비용 -5',icon:'⚡',
     apply:function(p){p.spRegen=2;p.skillCostReduction=5},
@@ -1398,7 +1399,8 @@ var MINI_REWARDS=[
   // 스탯 +1
   {name:'공격력 +1',icon:'⚔️',desc:'공격력 +1',fn:function(p){p.atk+=1;return '공격력 +1'}},
   {name:'쉴드력 +1',icon:'🛡️',desc:'쉴드력 +1',fn:function(p){p.def+=1;return '쉴드력 +1'}},
-  {name:'속도 +1',icon:'💨',desc:'속도 +1',fn:function(p){p.spd+=1;return '속도 +1'}},
+  {name:'크리확률 +1%',icon:'💥',desc:'크리확률 +1%',fn:function(p){p.crit+=1;return '크리확률 +1%'}},
+  {name:'회피확률 +1%',icon:'💨',desc:'회피확률 +1%',fn:function(p){p.dodge+=1;return '회피확률 +1%'}},
   {name:'최대 체력 +2',icon:'💖',desc:'최대 체력 +2',fn:function(p){p.maxHp+=2;p.hp+=2;return '최대 체력 +2'}},
   // 비례 강화
   {name:'공격력 +5%',icon:'⚔️',desc:'공격력 +5%',fn:function(p){var add=Math.max(1,Math.round(p.atk*0.05));p.atk+=add;return '공격력 +'+add}},
@@ -1429,7 +1431,8 @@ var STAT_UPGRADES=[
   {id:'hp',name:'체력',icon:'❤️',per:2,max:20,cost:function(lv){return 2+lv}},
   {id:'atk',name:'공격력',icon:'⚔️',per:1,max:15,cost:function(lv){return 3+lv}},
   {id:'def',name:'쉴드력',icon:'🛡️',per:1,max:10,cost:function(lv){return 3+lv}},
-  {id:'spd',name:'속도',icon:'💨',per:1,max:10,cost:function(lv){return 3+lv*2}},
+  {id:'crit',name:'크리확률',icon:'💥',per:1,max:10,cost:function(lv){return 3+lv*2}},
+  {id:'dodge',name:'회피확률',icon:'💨',per:1,max:10,cost:function(lv){return 3+lv*2}},
   {id:'sp',name:'SP',icon:'💎',per:3,max:10,cost:function(lv){return 3+lv}}
 ];
 
@@ -1631,7 +1634,7 @@ function initSelect(){
         card.classList.add('picked');BT.selectedRanger=key;
         var pb=PASSIVE_BUFFS[key];
         info.innerHTML='<div class="sel-info-name" style="color:'+r.color+'">'+r.name+' ('+r.weapon+')</div>'
-          +'<div class="sel-stat"><b>체력</b> '+r.hp+' <b>공격력</b> '+r.atk+' <b>쉴드력</b> '+r.def+' <b>속도</b> '+r.spd+'</div>'
+          +'<div class="sel-stat"><b>체력</b> '+r.hp+' <b>공격력</b> '+r.atk+' <b>쉴드력</b> '+r.def+' <b>크리</b> '+r.crit+'% <b>회피</b> '+r.dodge+'%</div>'
           +'<div class="sel-stat"><b>SP</b> '+r.sp+'</div>'
           +'<div class="sel-skill">✨ '+r.skill.name+' — '+r.skill.desc+' (SP '+r.skill.cost+')</div>'
           +'<div class="sel-skill" style="color:#9575cd;margin-top:4px">'+pb.icon+' 파트너 패시브: <b>'+pb.name+'</b> — '+pb.desc+'<br><span style="color:#ffd700;font-size:11px">스킬 보너스: '+pb.skillDesc+'</span></div>';
@@ -1745,7 +1748,7 @@ function startDefendMode(rangerKey,passiveKey){
   BT.player={
     key:rangerKey,name:r.name,color:r.color,
     hp:mhp,maxHp:mhp,atk:r.atk+getStatBonus('atk'),def:r.def+getStatBonus('def'),
-    spd:r.spd+getStatBonus('spd'),sp:msp,maxSp:msp,
+    crit:r.crit+getStatBonus('crit'),dodge:r.dodge+getStatBonus('dodge'),sp:msp,maxSp:msp,
     skill:r.skill,skillBonus:getLabBonus('skill'),
     guarding:false,critBonus:0,spRegen:0,skillCostReduction:0,hpRegen:0
   };
@@ -1998,7 +2001,7 @@ function showActions(){
   }
   // ── 예상행동 프리뷰 ──
   var pvEl=$('bt-preview');pvEl.innerHTML='';
-  var critChance=Math.round((p.spd*0.01+0.05+(p.critBonus||0)+BT.perkCritChance)*100);
+  var critChance=Math.round((p.crit*0.01+(p.critBonus||0)+BT.perkCritChance)*100);
   var spRegen=(p.spRegen||0);
   function setPv(html){pvEl.innerHTML=html}
   function clearPv(){pvEl.innerHTML=''}
@@ -2149,7 +2152,7 @@ function btDrama(text,color,cb,mode){
 }
 
 // ── 데미지 계산 ──
-function statKR(s){return{atk:'공격력',def:'방어력',spd:'속도',hp:'체력',sp:'SP'}[s]||s.toUpperCase()}
+function statKR(s){return{atk:'공격력',def:'방어력',crit:'크리확률',dodge:'회피확률',hp:'체력',sp:'SP'}[s]||s.toUpperCase()}
 function calcDmg(atk,def,multi,ignoreDef){
   var base=atk*(multi||1)*(1+Math.random()*0.3);
   var effectiveDef=Math.max(0,def)*(1-(ignoreDef||0));
@@ -2205,7 +2208,7 @@ function doPlayerAction(action){
     var dmg=calcDmg(p.atk+getBuffVal('atk')+redBonus,eDef,atkMultiplier,blackPierce);
     if(BT.perkDmgUp>0)dmg=Math.round(dmg*(1+BT.perkDmgUp));
     // 크리티컬 체크
-    var crit=BT.guaranteedCrit||Math.random()<(p.spd*0.01+0.05+(p.critBonus||0)+(BT.blueCritChain*0.08)+BT.perkCritChance);
+    var crit=BT.guaranteedCrit||Math.random()<(p.crit*0.01+(p.critBonus||0)+(BT.blueCritChain*0.08)+BT.perkCritChance);
     BT.guaranteedCrit=false;
     if(crit){dmg=Math.round(dmg*(1.5+BT.perkCritDmg))}
     // 기선제압
@@ -2306,7 +2309,7 @@ function doPlayerAction(action){
     multi*=(1+yellowBonus);
     // 레드 고유: 투지 5 소비
     if(p.key==='red'&&BT.redMomentum>=5){multi*=1.5;BT.redMomentum=0}
-    var baseCrit=p.spd*0.01+0.05+(p.critBonus||0)+BT.perkCritChance;
+    var baseCrit=p.crit*0.01+(p.critBonus||0)+BT.perkCritChance;
     var skillCritBonus=(BT.passiveKey==='blue')?0.08:0;
     var skillCrit=BT.guaranteedCrit||Math.random()<(baseCrit+skillCritBonus);
     BT.guaranteedCrit=false;
@@ -2368,7 +2371,7 @@ function doPlayerAction(action){
     }
     multi*=(1+yellowBonus);
     if(p.key==='red'&&BT.redMomentum>=5){multi*=1.5;BT.redMomentum=0}
-    var skillCrit=BT.guaranteedCrit||Math.random()<(p.spd*0.01+0.05+(p.critBonus||0)+BT.perkCritChance);
+    var skillCrit=BT.guaranteedCrit||Math.random()<(p.crit*0.01+(p.critBonus||0)+BT.perkCritChance);
     BT.guaranteedCrit=false;
     skillIgnore=Math.min(1,skillIgnore+BT.perkArmorPen);
     var dmg=calcDmg(p.atk+getBuffVal('atk'),e.def+getDebuffVal('def'),multi,skillIgnore);
@@ -2595,7 +2598,7 @@ function enemyTurn(){
   var dmg=calcDmg(e.atk,0,atkMulti,0);
   if(BT.perkDmgReduce>0)dmg=Math.max(1,Math.round(dmg*(1-BT.perkDmgReduce)));
   // 회피 (SPD 기반 + perkDodge)
-  if(Math.random()<p.spd*0.008+BT.perkDodge){
+  if(Math.random()<p.dodge*0.01+BT.perkDodge){
     btLog(p.name+'이(가) 회피했다!');
     setTimeout(endTurn,500);
     return;
