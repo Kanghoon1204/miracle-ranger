@@ -125,6 +125,7 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 #ending-screen.end-show>.end-coming{animation:endFadeIn 1.5s ease 3s forwards}
 #ending-screen.end-show>.end-btn{animation:endFadeIn 1.5s ease 3.8s forwards}
 @keyframes endFadeIn{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 .end-line{font-family:'Noto Serif KR',serif;font-size:15px;color:#888;line-height:2.4;letter-spacing:1px}
 .end-line.bright{color:#ccc}
 .end-line.red{color:#e53935;font-weight:bold;font-size:17px}
@@ -737,7 +738,7 @@ function mkD(sc){
   s.appendChild(se('line',{x1:'37',y1:'60',x2:'37',y2:'64',stroke:'#1565c0','stroke-width':'1.5'}));
   return s;
 }
-function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},sc||4.5));w.style.filter='drop-shadow(0 0 32px rgba(123,31,162,0.8))'}else w.appendChild(mkR(t,sc));return w}
+function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},4.5));w.style.filter='drop-shadow(0 0 32px rgba(123,31,162,0.8))'}else w.appendChild(mkR(t,sc));return w}
 
 /* ===== 에피소드: "박사의 하루" ===== */
 var S=[
@@ -1238,6 +1239,10 @@ function doEnd(){
   el.appendChild(txEl('div','end-line bright','내일도 지킬 것이다.'));
   el.appendChild(document.createElement('br'));
   el.appendChild(txEl('div','end-line','그게 우리의 일상이니까.'));
+  el.appendChild(document.createElement('br'));
+  var ep=document.createElement('div');ep.style.cssText='color:#9575cd;font-size:12px;text-align:center;margin-top:16px;letter-spacing:2px;opacity:0;animation:fadeIn 2s 3s forwards';ep.textContent='— 프리퀄 에피소드 —';
+  var ep2=document.createElement('div');ep2.style.cssText='color:#666;font-size:11px;text-align:center;margin-top:6px;opacity:0;animation:fadeIn 2s 4s forwards';ep2.textContent='본편에서 이어집니다.';
+  el.appendChild(ep);el.appendChild(ep2);
 }
 
 function setChars(s){
