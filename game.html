@@ -1358,13 +1358,17 @@ var REWARDS=[
   {name:'최대 체력 증가',desc:'최대 체력 +5',icon:'💖',fn:function(p){p.maxHp+=5;p.hp+=5;return '최대 체력 +5'}},
   {name:'최대 SP 증가',desc:'최대 SP +10',icon:'💠',fn:function(p){p.maxSp+=10;p.sp=Math.min(p.maxSp,p.sp+10);return '최대 SP +10'}},
   {name:'필살기 강화',desc:'스킬 배율 +15%',icon:'🌟',fn:function(p){p.skillBonus=(p.skillBonus||0)+0.15;return '필살기 강화!'}},
+  // 비례 스탯 강화
+  {name:'공격력 연마',desc:'공격력 +10%',icon:'⚔️',fn:function(p){var add=Math.max(1,Math.round(p.atk*0.10));p.atk+=add;return '공격력 +'+add+' (+10%)'}},
+  {name:'체력 단련',desc:'최대 체력 +10%',icon:'💖',fn:function(p){var add=Math.max(2,Math.round(p.maxHp*0.10));p.maxHp+=add;p.hp+=add;return '최대 체력 +'+add+' (+10%)'}},
+  {name:'쉴드 연마',desc:'쉴드력 +10%',icon:'🛡️',fn:function(p){var add=Math.max(1,Math.round(p.def*0.10));p.def+=add;return '쉴드력 +'+add+' (+10%)'}},
   // 희귀 — 세부 스탯
   {name:'전체 강화',desc:'공격+1 쉴드력+1 속도+1',icon:'⚡',fn:function(p){p.atk+=1;p.def+=1;p.spd+=1;return '전체 +1!'},rare:1},
   {name:'강화 장갑',desc:'받는 피해 -5%',icon:'🔰',fn:function(p){BT.perkDmgReduce=Math.min(0.50,BT.perkDmgReduce+0.05);return '피해 감소 +5%! (총 '+Math.round(BT.perkDmgReduce*100)+'%)'},rare:1},
-  {name:'치명타 증폭',desc:'치명타 데미지 +15%',icon:'💥',fn:function(p){BT.perkCritDmg+=0.15;return '크리 데미지 UP! (x'+(1.5+BT.perkCritDmg).toFixed(2)+')'},rare:1},
+  {name:'치명타 증폭',desc:'치명타 데미지 +15% (수확체감)',icon:'💥',fn:function(p){var add=0.15*Math.max(0.3,1-BT.perkCritDmg);BT.perkCritDmg+=add;return '크리 데미지 +'+Math.round(add*100)+'%! (x'+(1.5+BT.perkCritDmg).toFixed(2)+')'},rare:1},
   {name:'쉴드 강화',desc:'쉴드 생성량 +15%',icon:'🛡️',fn:function(p){BT.perkShieldUp+=0.15;return '쉴드량 +15%! (총 +'+Math.round(BT.perkShieldUp*100)+'%)'},rare:1},
   {name:'파괴자',desc:'주는 피해 +5%',icon:'⚔️',fn:function(p){BT.perkDmgUp+=0.05;return '피해량 +5%! (총 +'+Math.round(BT.perkDmgUp*100)+'%)'},rare:1},
-  {name:'관통탄',desc:'방어력 무시 +10%',icon:'🎯',fn:function(p){BT.perkArmorPen=Math.min(1,BT.perkArmorPen+0.10);return '관통 +10%! (총 '+Math.round(BT.perkArmorPen*100)+'%)'},rare:1}
+  {name:'관통탄',desc:'방어력 무시 +10% (최대 70%)',icon:'🎯',fn:function(p){BT.perkArmorPen=Math.min(0.70,BT.perkArmorPen+0.10);return '관통 +10%! (총 '+Math.round(BT.perkArmorPen*100)+'%)'},rare:1}
 ];
 
 // ── 패시브 버프 ──
@@ -1378,11 +1382,11 @@ var PASSIVE_BUFFS={
   blue:{name:'전술의 눈',desc:'크리율 +6%, 속도 +10%',icon:'🎯',
     apply:function(p){p.spd=Math.round(p.spd*1.10);p.critBonus=0.06},
     skillDesc:'스킬 크리티컬 +8%'},
-  yellow:{name:'번개의 에너지',desc:'매턴 SP+3, 스킬비용 -5',icon:'⚡',
-    apply:function(p){p.spRegen=3;p.skillCostReduction=5},
+  yellow:{name:'번개의 에너지',desc:'매턴 SP+2, 스킬비용 -5',icon:'⚡',
+    apply:function(p){p.spRegen=2;p.skillCostReduction=5},
     skillDesc:'스킬 비용 추가 -5 (총 -10)'},
-  pink:{name:'수호의 유대',desc:'쉴드력 +10%, 피해 감소 5%, 웨이브 클리어 시 HP 10% 회복',icon:'💗',
-    apply:function(p){p.def=Math.round(p.def*1.10);BT.perkDmgReduce+=0.05},
+  pink:{name:'수호의 유대',desc:'쉴드력 +8%, 피해 감소 3%, 웨이브 클리어 시 HP 7% 회복',icon:'💗',
+    apply:function(p){p.def=Math.round(p.def*1.08);BT.perkDmgReduce+=0.03},
     skillDesc:'스킬 사용 시 쉴드 5% 부여'}
 };
 
@@ -1396,12 +1400,15 @@ var MINI_REWARDS=[
   {name:'쉴드력 +1',icon:'🛡️',desc:'쉴드력 +1',fn:function(p){p.def+=1;return '쉴드력 +1'}},
   {name:'속도 +1',icon:'💨',desc:'속도 +1',fn:function(p){p.spd+=1;return '속도 +1'}},
   {name:'최대 체력 +2',icon:'💖',desc:'최대 체력 +2',fn:function(p){p.maxHp+=2;p.hp+=2;return '최대 체력 +2'}},
+  // 비례 강화
+  {name:'공격력 +5%',icon:'⚔️',desc:'공격력 +5%',fn:function(p){var add=Math.max(1,Math.round(p.atk*0.05));p.atk+=add;return '공격력 +'+add}},
+  {name:'체력 +5%',icon:'💖',desc:'최대 체력 +5%',fn:function(p){var add=Math.max(1,Math.round(p.maxHp*0.05));p.maxHp+=add;p.hp+=add;return '최대 체력 +'+add}},
   // 세부 스탯
   {name:'피해 감소',icon:'🔰',desc:'받는 피해 -3%',fn:function(p){BT.perkDmgReduce=Math.min(0.50,BT.perkDmgReduce+0.03);return '피해 감소 +3%!'}},
   {name:'치명타 확률',icon:'🎯',desc:'치명타 확률 +3%',fn:function(p){BT.perkCritChance+=0.03;return '크리 확률 +3%!'}},
   {name:'쉴드 보강',icon:'🛡️',desc:'쉴드 생성량 +8%',fn:function(p){BT.perkShieldUp+=0.08;return '쉴드량 +8%!'}},
-  {name:'관통력',icon:'🎯',desc:'방어력 무시 +5%',fn:function(p){BT.perkArmorPen=Math.min(1,BT.perkArmorPen+0.05);return '관통 +5%!'}},
-  {name:'크리 데미지',icon:'💥',desc:'치명타 데미지 +8%',fn:function(p){BT.perkCritDmg+=0.08;return '크리 데미지 +8%!'}}
+  {name:'관통력',icon:'🎯',desc:'방어력 무시 +5% (최대 70%)',fn:function(p){BT.perkArmorPen=Math.min(0.70,BT.perkArmorPen+0.05);return '관통 +5%!'}},
+  {name:'크리 데미지',icon:'💥',desc:'치명타 데미지 +8% (수확체감)',fn:function(p){var add=0.08*Math.max(0.3,1-BT.perkCritDmg);BT.perkCritDmg+=add;return '크리 데미지 +'+Math.round(add*100)+'%!'}}
 ];
 
 // ── 전투 상태 ──
@@ -1796,8 +1803,8 @@ function nextWave(){
   // 웨이브 클리어 회복 (연구소 회복 강화 반영)
   if(BT.wave>1){
     var healPct=0.15+getLabBonus('heal');
-    // 핑크 패시브: 웨이브 클리어 시 추가 10% 회복
-    if(BT.passiveKey==='pink')healPct+=0.10;
+    // 핑크 패시브: 웨이브 클리어 시 추가 7% 회복
+    if(BT.passiveKey==='pink')healPct+=0.07;
     BT.player.hp=Math.min(BT.player.maxHp,BT.player.hp+Math.round(BT.player.maxHp*healPct));
   }
   BT.enemy=generateEnemy(BT.wave);
