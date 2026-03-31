@@ -1428,12 +1428,14 @@ var BT={wave:0,kills:0,player:null,enemy:null,turn:0,supportCD:0,acting:false,
 
 // ── 스탯 강화 (MP 통화) ──
 var STAT_UPGRADES=[
-  {id:'hp',name:'체력',icon:'❤️',per:2,max:20,cost:function(lv){return 2+lv}},
-  {id:'atk',name:'공격력',icon:'⚔️',per:1,max:15,cost:function(lv){return 3+lv}},
-  {id:'def',name:'쉴드력',icon:'🛡️',per:1,max:10,cost:function(lv){return 3+lv}},
-  {id:'crit',name:'크리확률',icon:'💥',per:1,max:10,cost:function(lv){return 3+lv*2}},
-  {id:'dodge',name:'회피확률',icon:'💨',per:1,max:10,cost:function(lv){return 3+lv*2}},
-  {id:'sp',name:'SP',icon:'💎',per:3,max:10,cost:function(lv){return 3+lv}}
+  {id:'hp',name:'체력',icon:'❤️',per:2,max:20,unit:'',cap:'최대 +40',cost:function(lv){return 2+lv}},
+  {id:'atk',name:'공격력',icon:'⚔️',per:1,max:15,unit:'',cap:'최대 +15',cost:function(lv){return 3+lv}},
+  {id:'def',name:'쉴드력',icon:'🛡️',per:1,max:10,unit:'',cap:'최대 +10',cost:function(lv){return 3+lv}},
+  {id:'crit',name:'크리확률',icon:'💥',per:1,max:10,unit:'%',cap:'최대 +10%',cost:function(lv){return 3+lv*2}},
+  {id:'critDmg',name:'크리데미지',icon:'🔥',per:0.05,max:8,unit:'',cap:'최대 +40% (x1.90)',cost:function(lv){return 4+lv*2},fmt:function(v){return 'x'+(1.5+v).toFixed(2)}},
+  {id:'dodge',name:'회피확률',icon:'💨',per:1,max:10,unit:'%',cap:'최대 +10%',cost:function(lv){return 3+lv*2}},
+  {id:'dmgReduce',name:'피해감소',icon:'🔰',per:0.02,max:10,unit:'',cap:'최대 20% (전투 중 50%까지)',cost:function(lv){return 4+lv*2},fmt:function(v){return Math.round(v*100)+'%'}},
+  {id:'sp',name:'SP',icon:'💎',per:3,max:10,unit:'',cap:'최대 +30',cost:function(lv){return 3+lv}}
 ];
 
 // ── 연구소 업그레이드 (CE 통화) ──
@@ -1681,10 +1683,17 @@ function initLab(){
       var row=document.createElement('div');row.className='lab-row';
       var cost=u.cost(u.level);var isMax=u.level>=u.max;
       var totalBonus=u.level*u.per;
-      row.innerHTML='<div class="lab-icon">'+u.icon+'</div>'
-        +'<div class="lab-info"><div class="lab-stat-name">'+u.name+' Lv.'+u.level+'/'+u.max+'</div>'
-        +'<div class="lab-stat-val">+'+totalBonus+' (레벨당 +'+u.per+')</div>'
-        +(isMax?'<div class="lab-cost" style="color:#4ecca3">MAX</div>':'<div class="lab-cost">필요: '+cost+' MP</div>')+'</div>';
+      var bonusStr=u.fmt?u.fmt(totalBonus):'+'+totalBonus+(u.unit||'');
+      var perStr=u.fmt?'+'+Math.round(u.per*100)+'%':'+'+u.per+(u.unit||'');
+      var capDiv=document.createElement('div');capDiv.style.cssText='font-size:10px;color:#666';capDiv.textContent='상한: '+u.cap;
+      var infoDiv=document.createElement('div');infoDiv.className='lab-info';
+      var nameDiv=document.createElement('div');nameDiv.className='lab-stat-name';nameDiv.textContent=u.name+' Lv.'+u.level+'/'+u.max;
+      var valDiv=document.createElement('div');valDiv.className='lab-stat-val';valDiv.textContent=bonusStr+' (레벨당 '+perStr+')';
+      var costDiv=document.createElement('div');costDiv.className='lab-cost';
+      if(isMax){costDiv.style.color='#4ecca3';costDiv.textContent='MAX'}else{costDiv.textContent='필요: '+cost+' MP'}
+      infoDiv.appendChild(nameDiv);infoDiv.appendChild(valDiv);infoDiv.appendChild(capDiv);infoDiv.appendChild(costDiv);
+      var iconDiv=document.createElement('div');iconDiv.className='lab-icon';iconDiv.textContent=u.icon;
+      row.appendChild(iconDiv);row.appendChild(infoDiv);
       var btn=document.createElement('button');
       btn.className='lab-btn'+(isMax||progData.mp<cost?' maxed':'');
       btn.textContent=isMax?'최대':'강화';
@@ -1744,7 +1753,7 @@ function startDefendMode(rangerKey,passiveKey){
   BT.redMomentum=0;BT.blackAim=0;BT.blueCritChain=0;BT.yellowMarks=0;BT.pinkBond=0;
   BT.shield=0;BT.focusCD=0;BT.burnDmg=0;BT.burnTurns=0;BT.enemyTelegraph=false;BT.enemyIntent=null;BT.currentTgBonus=0;
   BT.supportCDs={};
-  BT.perkVamp=0;BT.perkCounterUp=false;BT.perkTgBoost=0;BT.perkDodge=0;BT.perkSpOverflow=0;BT.perkThorns=0;BT.perkFirstStrike=0;BT.perkChainLightning=false;BT.perkGuardHeal=false;BT.perkTgMin=false;BT.perkRage=false;BT.perkDoubleSupport=false;BT.perkDoubleSupportUsed=false;BT.perkDmgReduce=0;BT.perkCritChance=0;BT.perkCritDmg=0;BT.perkShieldUp=0;BT.perkDmgUp=0;BT.perkArmorPen=0;
+  BT.perkVamp=0;BT.perkCounterUp=false;BT.perkTgBoost=0;BT.perkDodge=0;BT.perkSpOverflow=0;BT.perkThorns=0;BT.perkFirstStrike=0;BT.perkChainLightning=false;BT.perkGuardHeal=false;BT.perkTgMin=false;BT.perkRage=false;BT.perkDoubleSupport=false;BT.perkDoubleSupportUsed=false;BT.perkDmgReduce=getStatBonus('dmgReduce');BT.perkCritChance=0;BT.perkCritDmg=getStatBonus('critDmg');BT.perkShieldUp=0;BT.perkDmgUp=0;BT.perkArmorPen=0;
   var mhp=r.hp+getStatBonus('hp'),msp=r.sp+getStatBonus('sp');
   BT.player={
     key:rangerKey,name:r.name,color:r.color,
