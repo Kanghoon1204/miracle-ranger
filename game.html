@@ -738,29 +738,39 @@ function mkD(sc){
   s.appendChild(se('line',{x1:'37',y1:'60',x2:'37',y2:'64',stroke:'#1565c0','stroke-width':'1.5'}));
   return s;
 }
-// 평상복 실루엣
+// 평상복 실루엣 (mkR과 동일 viewBox/비율)
 var SIL_COLORS={red:['#e53935','#b71c1c'],black:['#777','#333'],blue:['#42a5f5','#0d47a1'],yellow:['#fdd835','#f57f17'],pink:['#f48fb1','#c2185b'],doc:['#b0b0b0','#757575']};
 function mkSil(t,sc){
   sc=sc||1;var w=Math.round(60*sc),h=Math.round(100*sc);
   var cl=SIL_COLORS[t]||SIL_COLORS.doc;
   var s=se('svg',{viewBox:'0 0 60 100',width:''+w,height:''+h});
+  var uid='sg_'+t+'_'+Math.random().toString(36).substr(2,4);
   var df=se('defs');
-  var gr=se('linearGradient',{id:'sg_'+t,x1:'0',y1:'0',x2:'0',y2:'1'});
-  gr.appendChild(se('stop',{offset:'0%','stop-color':cl[0],'stop-opacity':'0.9'}));
-  gr.appendChild(se('stop',{offset:'100%','stop-color':cl[1],'stop-opacity':'0.7'}));
+  var gr=se('linearGradient',{id:uid,x1:'0',y1:'0',x2:'0',y2:'1'});
+  gr.appendChild(se('stop',{offset:'0%','stop-color':cl[0],'stop-opacity':'0.95'}));
+  gr.appendChild(se('stop',{offset:'100%','stop-color':cl[1],'stop-opacity':'0.8'}));
   df.appendChild(gr);s.appendChild(df);
-  // 머리
-  s.appendChild(se('ellipse',{cx:'30',cy:'22',rx:'12',ry:'14',fill:'url(#sg_'+t+')'}));
-  // 목
-  s.appendChild(se('rect',{x:'26',y:'35',width:'8',height:'6',fill:'url(#sg_'+t+')'}));
-  // 몸통 (캐주얼)
-  s.appendChild(se('path',{d:'M14,41 L22,38 L38,38 L46,41 L48,80 L12,80Z',fill:'url(#sg_'+t+')',opacity:'0.85'}));
-  // 팔
-  s.appendChild(se('path',{d:'M14,41 L6,65 L12,67 L18,48',fill:'url(#sg_'+t+')',opacity:'0.75'}));
-  s.appendChild(se('path',{d:'M46,41 L54,65 L48,67 L42,48',fill:'url(#sg_'+t+')',opacity:'0.75'}));
-  // 다리
-  s.appendChild(se('path',{d:'M18,80 L16,98 L24,98 L28,80',fill:'url(#sg_'+t+')',opacity:'0.8'}));
-  s.appendChild(se('path',{d:'M32,80 L36,98 L44,98 L42,80',fill:'url(#sg_'+t+')',opacity:'0.8'}));
+  // 머리카락 (mkR 헬멧과 같은 영역 y:8~35, 캐릭터별 헤어스타일)
+  if(t==='red')s.appendChild(se('path',{d:'M14,30 Q14,10 30,7 Q46,10 46,30 Q44,20 30,18 Q16,20 14,30Z',fill:'url(#'+uid+')',opacity:'0.7'}));
+  else if(t==='black')s.appendChild(se('path',{d:'M16,28 Q16,12 30,9 Q44,12 44,28 L42,22 Q38,16 30,14 Q22,16 18,22Z',fill:'url(#'+uid+')',opacity:'0.7'}));
+  else if(t==='blue')s.appendChild(se('path',{d:'M15,32 Q14,10 30,7 Q46,10 45,32 Q42,18 30,15 Q18,18 15,32Z',fill:'url(#'+uid+')',opacity:'0.7'}));
+  else if(t==='yellow')s.appendChild(se('path',{d:'M12,30 Q14,10 30,8 Q46,10 48,30 Q44,16 30,13 Q16,16 12,30Z',fill:'url(#'+uid+')',opacity:'0.7'}));
+  else if(t==='pink')s.appendChild(se('path',{d:'M13,34 Q13,10 30,7 Q47,10 47,34 Q44,20 30,16 Q16,20 13,34Z',fill:'url(#'+uid+')',opacity:'0.7'}));
+  else s.appendChild(se('path',{d:'M18,28 Q18,12 30,10 Q42,12 42,28 L40,22 Q36,16 30,14 Q24,16 20,22Z',fill:'url(#'+uid+')',opacity:'0.7'}));
+  // 얼굴 (mkR 바이저 영역 y:20~40)
+  s.appendChild(se('ellipse',{cx:'30',cy:'32',rx:'14',ry:'13',fill:'url(#'+uid+')'}));
+  // 눈 힌트 (미세한 하이라이트)
+  s.appendChild(se('ellipse',{cx:'24',cy:'30',rx:'2',ry:'1.5',fill:'rgba(255,255,255,0.15)'}));
+  s.appendChild(se('ellipse',{cx:'36',cy:'30',rx:'2',ry:'1.5',fill:'rgba(255,255,255,0.15)'}));
+  // 목 (mkR 넥 영역 y:44~52)
+  s.appendChild(se('path',{d:'M24,44 L36,44 L34,52 L26,52Z',fill:'url(#'+uid+')',opacity:'0.85'}));
+  // 몸통 — 캐주얼 상의 (mkR 바디 영역 y:53~95)
+  s.appendChild(se('path',{d:'M14,56 L24,52 L36,52 L46,56 L46,88 Q46,93 42,93 L18,93 Q14,93 14,88Z',fill:'url(#'+uid+')',opacity:'0.85'}));
+  // 어깨~팔 (자연스러운 곡선)
+  s.appendChild(se('path',{d:'M14,56 L10,58 L8,75 L14,73',fill:'url(#'+uid+')',opacity:'0.7'}));
+  s.appendChild(se('path',{d:'M46,56 L50,58 L52,75 L46,73',fill:'url(#'+uid+')',opacity:'0.7'}));
+  // 칼라/옷깃 힌트
+  s.appendChild(se('path',{d:'M26,52 L30,58 L34,52',fill:'none',stroke:'rgba(255,255,255,0.2)','stroke-width':'1'}));
   return s;
 }
 function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;var base=t.replace('_sil','');if(t.indexOf('_sil')>-1){w.appendChild(mkSil(base,sc));w.style.filter='drop-shadow(0 2px 8px '+((SIL_COLORS[base]||SIL_COLORS.doc)[0])+'40)'}else if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},4.5));w.style.filter='drop-shadow(0 0 32px rgba(123,31,162,0.8))'}else w.appendChild(mkR(t,sc));return w}
@@ -780,15 +790,15 @@ var S=[
 {t:'n',tx:'핑크는 아침부터 방방 뛰고 있었고,\n옐로는 느긋하게 웃으며 밥을 먹었다.\n\n...시끄럽지만, 싫지 않은 아침이다.'},
 {t:'d',sp:'블루',cl:'#42a5f5',tx:'"박사님, 그 장치...\n미라클 에너지 관련이죠?"',ch:['blue_sil','doc'],lo:'right',tk:'blue_sil'},
 {t:'n',tx:'...역시 블루는 못 속인다.'},
-{t:'d',sp:'박사',cl:'#9575cd',tx:'"역시 눈치가 빠르시네용.\n미라클 에너지를 증폭시키는 장치에용.\n아직 시제품이지만용."',ch:['blue_sil','doc'],lo:'right',tk:'doc'},
+{t:'d',sp:'박사',cl:'#9575cd',tx:'"맞아용~ 에너지 증폭 장치에용.\n아직 시제품이지만용."',ch:['blue_sil','doc'],lo:'right',tk:'doc'},
 {t:'d',sp:'블루',cl:'#42a5f5',tx:'"증폭... 흥미롭네.\n완성되면 알려줘."',ch:['blue_sil'],lo:'right',tk:'blue_sil'},
 {t:'sfx',v:'경보!'},
 {t:'fx',v:'flash-red'},
 {t:'n',tx:'갑자기 연구소 전체에 경보가 울렸다.\n천장의 붉은 경고등이 점멸했다.'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"출동이다.\n수저 내려놓고 바로 간다."',ch:['red_sil','black_sil','blue_sil','yellow_sil','pink_sil'],lo:'spread',tk:'red_sil'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"간다."',ch:['red_sil','black_sil','blue_sil','yellow_sil','pink_sil'],lo:'spread',tk:'red_sil'},
 {t:'n',tx:'숟가락이 일제히 놓였다.\n블랙은 국을 한 모금 더 마시고 일어났다.'},
-{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"에— 아직 다 못 먹었는데!!"',ch:['pink'],lo:'left',tk:'pink'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"돌아와서 먹어.\n가자."',ch:['red'],lo:'left',tk:'red'},
+{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"에— 나 아직 다 못 먹었는데!!"',ch:['pink'],lo:'left',tk:'pink'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"돌아와서 먹어."',ch:['red'],lo:'left',tk:'red'},
 {t:'n',tx:'다섯 명의 뒷모습을 바라봤다.\n늘 그렇듯, 빠른 발걸음으로 나갔다.\n\n...나는 경보를 해제하고 작업대로 돌아갔다.'},
 {t:'pause',ms:800},
 
@@ -811,7 +821,7 @@ var S=[
 {t:'pause',ms:500},
 {t:'d',sp:'카오스',cl:'#ce93d8',tx:'"기다리고 있었다.\n미라클 레인저."',ch:['chaos'],lo:'right',tk:'chaos'},
 {t:'d',sp:'레드',cl:'#e53935',tx:'"카오스!\n네놈들의 악행은 여기까지다!"',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
-{t:'n',tx:'레인저들이 즉시 전투 태세를 잡았다.\n모니터 앞에서 숨을 죽였다.'},
+{t:'n',tx:'레인저들이 전투 태세를 잡았다.\n모니터 앞에서 숨을 죽였다.'},
 {t:'d',sp:'카오스',cl:'#ce93d8',tx:'"오늘은 좀 다를 거다.\n특별한 걸 준비해 왔거든."',ch:['chaos'],lo:'right',tk:'chaos'},
 {t:'sfx',v:'쿠우웅!'},
 {t:'fx',v:'shake'},
@@ -819,7 +829,7 @@ var S=[
 {t:'n',tx:'모니터 화면이 일그러질 정도의 충격파.\n땅이 갈라지며 거대한 괴인이 나타났다.\n\n...이건 좀 다르다.',ch:['titan'],lo:'center',en:true},
 {t:'d',sp:'블루',cl:'#42a5f5',tx:'"야, 이건 좀 다른데?\n에너지 수치가 완전 비정상이야."',ch:['blue'],lo:'left',tk:'blue'},
 {t:'n',tx:'모니터 너머로도\n블루의 긴장감이 전해졌다.'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"상관없다.\n할 일은 변하지 않아.\n전투 개시!"',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"상관없어.\n간다."',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
 {t:'pause',ms:600},
 
 // ─── ACT 3: 전투 — 밀린다 (모니터 관전) ───
@@ -932,8 +942,8 @@ var S=[
 {t:'pause',ms:500},
 {t:'bh',eHp:90,tHp:100},
 {t:'d',sp:'레드',cl:'#e53935',tx:'"이 힘은...!"',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
-{t:'d',sp:'박사',cl:'#9575cd',tx:'"여러분의 미라클 에너지를\n증폭시키는 거예요.\n지금이에요!"',ch:['doc'],lo:'right',tk:'doc'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"...감사합니다, 박사님.\n전원, 다시 간다!"',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
+{t:'d',sp:'박사',cl:'#9575cd',tx:'"에너지 증폭이에용!\n지금이에요!"',ch:['doc'],lo:'right',tk:'doc'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"...고마워, 박사님.\n다시 간다!"',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
 {t:'d',sp:'카오스',cl:'#ce93d8',tx:'"그까짓 장난감 하나로\n뭐가 달라지겠—"',ch:['chaos'],lo:'right',tk:'chaos'},
 
 // ─── ACT 5: 역전 ───
@@ -1093,7 +1103,7 @@ var S=[
 {t:'d',sp:'블랙',cl:'#999',tx:'"...푹 쉬어."',ch:['black_sil'],lo:'right',tk:'black_sil'},
 {t:'d',sp:'옐로',cl:'#ffd54f',tx:'"잘 자~"',ch:['yellow_sil'],lo:'left',tk:'yellow_sil'},
 {t:'d',sp:'블루',cl:'#42a5f5',tx:'"내일 봐."',ch:['blue_sil'],lo:'right',tk:'blue_sil'},
-{t:'d',sp:'박사',cl:'#9575cd',tx:'"여러분, 오늘 정말 수고했어용.\n푹 쉬세용~"',ch:['doc'],lo:'right',tk:'doc'},
+{t:'d',sp:'박사',cl:'#9575cd',tx:'"다들 수고했어용~\n푹 쉬세용."',ch:['doc'],lo:'right',tk:'doc'},
 {t:'n',tx:'하나둘 방으로 들어갔다.'},
 {t:'n',tx:'레드가 마지막으로 남았다.\n잠시 복도에 서서 기지개를 켰다.'},
 {t:'d',sp:'레드',cl:'#e53935',tx:'"...내일도 바쁘겠지.\n박사님도 푹 쉬어."',ch:['red_sil'],lo:'right',tk:'red_sil'},
