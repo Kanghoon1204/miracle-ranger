@@ -737,7 +737,7 @@ function mkD(sc){
   s.appendChild(se('line',{x1:'37',y1:'60',x2:'37',y2:'64',stroke:'#1565c0','stroke-width':'1.5'}));
   return s;
 }
-function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},sc||1.4));w.style.filter='drop-shadow(0 0 16px rgba(123,31,162,0.6))'}else w.appendChild(mkR(t,sc));return w}
+function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},sc||2.2));w.style.filter='drop-shadow(0 0 24px rgba(123,31,162,0.7))'}else w.appendChild(mkR(t,sc));return w}
 
 /* ===== 에피소드: "박사의 하루" ===== */
 var S=[
