@@ -738,7 +738,32 @@ function mkD(sc){
   s.appendChild(se('line',{x1:'37',y1:'60',x2:'37',y2:'64',stroke:'#1565c0','stroke-width':'1.5'}));
   return s;
 }
-function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},4.5));w.style.filter='drop-shadow(0 0 32px rgba(123,31,162,0.8))'}else w.appendChild(mkR(t,sc));return w}
+// 평상복 실루엣
+var SIL_COLORS={red:['#e53935','#b71c1c'],black:['#777','#333'],blue:['#42a5f5','#0d47a1'],yellow:['#fdd835','#f57f17'],pink:['#f48fb1','#c2185b'],doc:['#b0b0b0','#757575']};
+function mkSil(t,sc){
+  sc=sc||1;var w=Math.round(60*sc),h=Math.round(100*sc);
+  var cl=SIL_COLORS[t]||SIL_COLORS.doc;
+  var s=se('svg',{viewBox:'0 0 60 100',width:''+w,height:''+h});
+  var df=se('defs');
+  var gr=se('linearGradient',{id:'sg_'+t,x1:'0',y1:'0',x2:'0',y2:'1'});
+  gr.appendChild(se('stop',{offset:'0%','stop-color':cl[0],'stop-opacity':'0.9'}));
+  gr.appendChild(se('stop',{offset:'100%','stop-color':cl[1],'stop-opacity':'0.7'}));
+  df.appendChild(gr);s.appendChild(df);
+  // 머리
+  s.appendChild(se('ellipse',{cx:'30',cy:'22',rx:'12',ry:'14',fill:'url(#sg_'+t+')'}));
+  // 목
+  s.appendChild(se('rect',{x:'26',y:'35',width:'8',height:'6',fill:'url(#sg_'+t+')'}));
+  // 몸통 (캐주얼)
+  s.appendChild(se('path',{d:'M14,41 L22,38 L38,38 L46,41 L48,80 L12,80Z',fill:'url(#sg_'+t+')',opacity:'0.85'}));
+  // 팔
+  s.appendChild(se('path',{d:'M14,41 L6,65 L12,67 L18,48',fill:'url(#sg_'+t+')',opacity:'0.75'}));
+  s.appendChild(se('path',{d:'M46,41 L54,65 L48,67 L42,48',fill:'url(#sg_'+t+')',opacity:'0.75'}));
+  // 다리
+  s.appendChild(se('path',{d:'M18,80 L16,98 L24,98 L28,80',fill:'url(#sg_'+t+')',opacity:'0.8'}));
+  s.appendChild(se('path',{d:'M32,80 L36,98 L44,98 L42,80',fill:'url(#sg_'+t+')',opacity:'0.8'}));
+  return s;
+}
+function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;var base=t.replace('_sil','');if(t.indexOf('_sil')>-1){w.appendChild(mkSil(base,sc));w.style.filter='drop-shadow(0 2px 8px '+((SIL_COLORS[base]||SIL_COLORS.doc)[0])+'40)'}else if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},4.5));w.style.filter='drop-shadow(0 0 32px rgba(123,31,162,0.8))'}else w.appendChild(mkR(t,sc));return w}
 
 /* ===== 에피소드: "박사의 하루" ===== */
 var S=[
@@ -747,20 +772,20 @@ var S=[
 
 // ─── ACT 1: 연구소의 아침 (박사 1인칭) ───
 {t:'bg',v:'lab'},
-{t:'n',tx:'아침 식당.\n활동복 대신 평상복 차림의 다섯 명이\n둘러앉아 밥을 먹고 있었다.'},
-{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"오늘 계란말이 진짜 맛있다!!\n박사님도 빨리 와서 먹어요!!"',ch:['pink','yellow'],lo:'left',tk:'pink'},
+{t:'n',tx:'아침 식당.\n다섯 명이 둘러앉아 밥을 먹고 있었다.',ch:['red_sil','black_sil','blue_sil','yellow_sil','pink_sil'],lo:'spread'},
+{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"오늘 계란말이 진짜 맛있다!!\n박사님도 빨리 와서 먹어요!!"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'pink_sil'},
 {t:'d',sp:'박사',cl:'#9575cd',tx:'"아, 고마워용~\n나는 이거 하나만 마저..."',ch:['doc'],lo:'right',tk:'doc'},
 {t:'n',tx:'사실 밤새 만지작거리던 장치가 신경 쓰였다.\n미라클 에너지 증폭 장치.\n이론상으로는 완벽한데...'},
-{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"박사님은 밥보다 기계가\n더 좋은 거야~?"',ch:['pink','yellow'],lo:'left',tk:'yellow'},
+{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"박사님은 밥보다 기계가\n더 좋은 거야~?"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'yellow_sil'},
 {t:'n',tx:'핑크는 아침부터 방방 뛰고 있었고,\n옐로는 느긋하게 웃으며 밥을 먹었다.\n\n...시끄럽지만, 싫지 않은 아침이다.'},
-{t:'d',sp:'블루',cl:'#42a5f5',tx:'"박사님, 그 장치...\n미라클 에너지 관련이죠?"',ch:['blue','doc'],lo:'right',tk:'blue'},
+{t:'d',sp:'블루',cl:'#42a5f5',tx:'"박사님, 그 장치...\n미라클 에너지 관련이죠?"',ch:['blue_sil','doc'],lo:'right',tk:'blue_sil'},
 {t:'n',tx:'...역시 블루는 못 속인다.'},
-{t:'d',sp:'박사',cl:'#9575cd',tx:'"역시 눈치가 빠르시네용.\n미라클 에너지를 증폭시키는 장치에용.\n아직 시제품이지만용."',ch:['blue','doc'],lo:'right',tk:'doc'},
-{t:'d',sp:'블루',cl:'#42a5f5',tx:'"증폭... 흥미롭네.\n완성되면 알려줘."',ch:['blue'],lo:'right',tk:'blue'},
+{t:'d',sp:'박사',cl:'#9575cd',tx:'"역시 눈치가 빠르시네용.\n미라클 에너지를 증폭시키는 장치에용.\n아직 시제품이지만용."',ch:['blue_sil','doc'],lo:'right',tk:'doc'},
+{t:'d',sp:'블루',cl:'#42a5f5',tx:'"증폭... 흥미롭네.\n완성되면 알려줘."',ch:['blue_sil'],lo:'right',tk:'blue_sil'},
 {t:'sfx',v:'경보!'},
 {t:'fx',v:'flash-red'},
 {t:'n',tx:'갑자기 연구소 전체에 경보가 울렸다.\n천장의 붉은 경고등이 점멸했다.'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"출동이다.\n수저 내려놓고 바로 간다."',ch:['red','black','blue','yellow','pink'],lo:'spread',tk:'red'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"출동이다.\n수저 내려놓고 바로 간다."',ch:['red_sil','black_sil','blue_sil','yellow_sil','pink_sil'],lo:'spread',tk:'red_sil'},
 {t:'n',tx:'숟가락이 일제히 놓였다.\n블랙은 국을 한 모금 더 마시고 일어났다.'},
 {t:'d',sp:'핑크',cl:'#f48fb1',tx:'"에— 아직 다 못 먹었는데!!"',ch:['pink'],lo:'left',tk:'pink'},
 {t:'d',sp:'레드',cl:'#e53935',tx:'"돌아와서 먹어.\n가자."',ch:['red'],lo:'left',tk:'red'},
@@ -1063,19 +1088,18 @@ var S=[
 // ─── ACT 7: 밤 ───
 {t:'bg',v:'night'},
 {t:'n',tx:'밤이 깊어졌다.\n연구소의 불이 하나둘 꺼져갔다.',ch:['doc']},
-{t:'n',tx:'숙소 복도.\n레인저들이 각자 방 앞에 서 있었다.\n활동복을 벗은 평상복 차림이었다.'},
-{t:'n',tx:'활동복 없이 보는 다섯 명은\n어딘가 달랐다.\n그냥 평범한 사람들 같았다.'},
-{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"다들 수고!!\n내일도 파이팅이야!!"',ch:['pink'],lo:'left',tk:'pink'},
-{t:'d',sp:'블랙',cl:'#999',tx:'"...푹 쉬어."',ch:['black'],lo:'right',tk:'black'},
-{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"잘 자~"',ch:['yellow'],lo:'left',tk:'yellow'},
-{t:'d',sp:'블루',cl:'#42a5f5',tx:'"내일 봐."',ch:['blue'],lo:'right',tk:'blue'},
+{t:'n',tx:'숙소 복도.\n레인저들이 각자 방 앞에 서 있었다.',ch:['red_sil','black_sil','blue_sil','yellow_sil','pink_sil'],lo:'spread'},
+{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"다들 수고!!\n내일도 파이팅이야!!"',ch:['pink_sil'],lo:'left',tk:'pink_sil'},
+{t:'d',sp:'블랙',cl:'#999',tx:'"...푹 쉬어."',ch:['black_sil'],lo:'right',tk:'black_sil'},
+{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"잘 자~"',ch:['yellow_sil'],lo:'left',tk:'yellow_sil'},
+{t:'d',sp:'블루',cl:'#42a5f5',tx:'"내일 봐."',ch:['blue_sil'],lo:'right',tk:'blue_sil'},
 {t:'d',sp:'박사',cl:'#9575cd',tx:'"여러분, 오늘 정말 수고했어용.\n푹 쉬세용~"',ch:['doc'],lo:'right',tk:'doc'},
-{t:'n',tx:'하나둘 방으로 들어갔다.\n카드키를 대는 소리가 복도에 울렸다.\n삐. 삐. 삐. 삐.'},
+{t:'n',tx:'하나둘 방으로 들어갔다.'},
 {t:'n',tx:'레드가 마지막으로 남았다.\n잠시 복도에 서서 기지개를 켰다.'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"...내일도 바쁘겠지.\n박사님도 푹 쉬어."',ch:['red'],lo:'right',tk:'red'},
-{t:'n',tx:'편한 말투였다.\n리더일 때와는 다른, 평소의 레드.\n\n짧게 손 흔들고 카드키를 댔다.\n삐. 문이 닫혔다.'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"...내일도 바쁘겠지.\n박사님도 푹 쉬어."',ch:['red_sil'],lo:'right',tk:'red_sil'},
+{t:'n',tx:'편한 말투였다.\n리더일 때와는 다른, 평소의 레드.\n\n짧게 손 흔들고 방으로 들어갔다.'},
 {t:'pause',ms:1200},
-{t:'n',tx:'나도 내 방으로 갔다.\n카드키를 대자 익숙한 삐 소리.\n\n문을 닫았다.',ch:['doc']},
+{t:'n',tx:'나도 내 방으로 돌아왔다.\n문을 닫았다.',ch:['doc']},
 {t:'n',tx:'침대에 누웠다.\n천장을 바라봤다.'},
 {t:'n',tx:'아침에 다 같이 밥을 먹었다.\n경보가 울려서 뛰어갔다.\n위험한 전투가 있었다.\n모두 무사히 돌아왔다.'},
 {t:'pause',ms:1500},
