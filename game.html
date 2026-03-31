@@ -1634,7 +1634,8 @@ function initSelect(){
         card.classList.add('picked');BT.selectedRanger=key;
         var pb=PASSIVE_BUFFS[key];
         info.innerHTML='<div class="sel-info-name" style="color:'+r.color+'">'+r.name+' ('+r.weapon+')</div>'
-          +'<div class="sel-stat"><b>체력</b> '+r.hp+' <b>공격력</b> '+r.atk+' <b>쉴드력</b> '+r.def+' <b>크리</b> '+r.crit+'% <b>회피</b> '+r.dodge+'%</div>'
+          +'<div class="sel-stat"><b>체력</b> '+r.hp+' <b>공격력</b> '+r.atk+' <b>쉴드력</b> '+r.def+'</div>'
++'<div class="sel-stat"><b>크리확률</b> '+r.crit+'% <b>크리데미지</b> x1.50 <b>회피</b> '+r.dodge+'%</div>'
           +'<div class="sel-stat"><b>SP</b> '+r.sp+'</div>'
           +'<div class="sel-skill">✨ '+r.skill.name+' — '+r.skill.desc+' (SP '+r.skill.cost+')</div>'
           +'<div class="sel-skill" style="color:#9575cd;margin-top:4px">'+pb.icon+' 파트너 패시브: <b>'+pb.name+'</b> — '+pb.desc+'<br><span style="color:#ffd700;font-size:11px">스킬 보너스: '+pb.skillDesc+'</span></div>';
@@ -1905,7 +1906,7 @@ function updateStatusIcons(){
   if(BT.shield>0){var s=document.createElement('span');s.className='bt-sicon guard';s.textContent='🛡️ 쉴드 '+BT.shield+' (매턴 50% 감소)';row.appendChild(s)}
   if(BT.perkDmgReduce>0){var s=document.createElement('span');s.className='bt-sicon buff';s.textContent='🔰 피해 감소 '+Math.round(BT.perkDmgReduce*100)+'%';row.appendChild(s)}
   if(BT.perkCritChance>0){var s=document.createElement('span');s.className='bt-sicon buff';s.textContent='🎯 치명타 확률 +'+Math.round(BT.perkCritChance*100)+'%';row.appendChild(s)}
-  if(BT.perkCritDmg>0){var s=document.createElement('span');s.className='bt-sicon buff';s.textContent='💥 치명타 데미지 +'+(BT.perkCritDmg*100).toFixed(0)+'%';row.appendChild(s)}
+  if(BT.perkCritDmg>0){var s=document.createElement('span');s.className='bt-sicon buff';s.textContent='💥 크리 데미지 x'+(1.5+BT.perkCritDmg).toFixed(2)+' (+'+(BT.perkCritDmg*100).toFixed(0)+'%)';row.appendChild(s)}
   if(BT.perkShieldUp>0){var s=document.createElement('span');s.className='bt-sicon guard';s.textContent='🛡️ 쉴드량 +'+Math.round(BT.perkShieldUp*100)+'%';row.appendChild(s)}
   if(BT.perkDmgUp>0){var s=document.createElement('span');s.className='bt-sicon charge';s.textContent='⚔️ 피해량 +'+Math.round(BT.perkDmgUp*100)+'%';row.appendChild(s)}
   if(BT.perkArmorPen>0){var s=document.createElement('span');s.className='bt-sicon buff';s.textContent='🎯 관통 +'+Math.round(BT.perkArmorPen*100)+'%';row.appendChild(s)}
@@ -2010,7 +2011,8 @@ function showActions(){
   var atkPvParts=[];
   if(BT.tacticalGauge>0)atkPvParts.push('<span class="pv-dmg">예상 ~'+Math.round(estAtk*(1+BT.tacticalGauge*0.1))+'</span> <span class="pv-buff">전술 게이지 '+BT.tacticalGauge+'단계 (+'+BT.tacticalGauge*10+'%)</span>');
   else atkPvParts.push('<span class="pv-dmg">예상 데미지 ~'+estAtk+'</span>');
-  atkPvParts.push('크리 확률 '+critChance+'%');
+  var critMultiPv=(1.5+BT.perkCritDmg).toFixed(2);
+  atkPvParts.push('크리 '+critChance+'% (x'+critMultiPv+')');
   if(spRegen>0)atkPvParts.push('<span class="pv-sp">SP+'+spRegen+' 회복</span>');
   previews.atk=atkPvParts.join(' · ');
   // 방어 프리뷰
@@ -2232,7 +2234,7 @@ function doPlayerAction(action){
     var logMsg=p.name+'의 공격! <span class="dmg">'+dmg+' 데미지</span>';
     var details=[];
     if(p.key==='black'&&blackPierce>0){details.push('관통'+Math.round(blackPierce*100)+'%')}
-    if(crit){logMsg+=' <span class="buff">크리티컬!</span>';details.push('크리x1.5')}
+    if(crit){var critMulti=(1.5+BT.perkCritDmg).toFixed(2);logMsg+=' <span class="buff">크리티컬! x'+critMulti+'</span>';details.push('크리x'+critMulti)}
     if(tgBonus>0){logMsg+=' <span class="buff">TG'+BT.tacticalGauge+'</span>';details.push('TG+'+Math.round(tgBonus*100)+'%')}
     if(p.key==='red'&&BT.redMomentum>0){logMsg+=' <span class="buff">투지 '+BT.redMomentum+'/5</span>';details.push('투지+'+Math.round(BT.redMomentum*2)+'%')}
     if(p.key==='black'&&BT.blackAim>0)logMsg+=' <span class="buff">🔫 관통 '+Math.round(BT.blackAim*10)+'%</span>';
@@ -2330,7 +2332,7 @@ function doPlayerAction(action){
       btChainFlash(p.color,2);btShake(true);
       showDmgNum(dmg,'bt-esvg','crit');
       var logMsg='✨ '+p.skill.name+'! <span class="dmg">'+dmg+' 데미지</span>';
-      if(skillCrit)logMsg+=' <span class="buff">크리티컬!</span>';
+      if(skillCrit){var critMulti=(1.5+BT.perkCritDmg).toFixed(2);logMsg+=' <span class="buff">크리티컬! x'+critMulti+'</span>'}
       if(tgBonus>0)logMsg+=' <span class="buff">TG'+BT.tacticalGauge+'!</span>';
       btLog(logMsg);
       // 추가 효과
@@ -2381,7 +2383,7 @@ function doPlayerAction(action){
     e.hp-=dmg;
     btChainFlash('#ffb300',2);btShake(true);showDmgNum(dmg,'bt-esvg',skillCrit?'crit':'');
     var ocLog='💥 오버차지 '+p.skill.name+'! <span class="dmg">'+dmg+'</span>';
-    if(skillCrit)ocLog+=' <span class="buff">크리티컬!</span>';
+    if(skillCrit){var critMulti=(1.5+BT.perkCritDmg).toFixed(2);ocLog+=' <span class="buff">크리티컬! x'+critMulti+'</span>'}
     btLog(ocLog);
     if(p.skill.heal){var sh=Math.round((p.def*0.5+p.maxHp*0.05)*(1+BT.perkShieldUp));BT.shield+=sh;btLogAppend('<span class="buff">🛡️ 쉴드 +'+sh+'</span>')}
     if(yellowStunBonus>0){BT.stunTurns+=yellowStunBonus;btLogAppend('<span class="buff">감전 폭발! 스턴 '+yellowStunBonus+'턴</span>')}
