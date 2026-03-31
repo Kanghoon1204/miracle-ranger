@@ -752,12 +752,8 @@ function mkSil(t,sc){
   gr.appendChild(se('stop',{offset:'100%','stop-color':cl[1],'stop-opacity':'0.7'}));
   df.appendChild(gr);s.appendChild(df);
   var f='url(#'+uid+')';
-  // 머리 — mkR 헬멧 외곽 그대로
-  s.appendChild(se('path',{d:'M10,35 Q10,8 30,5 Q50,8 50,35 Q50,44 45,47 L40,50 30,52 20,50 15,47 Q10,44 10,35Z',fill:f}));
-  // 목 — mkR 넥피스 그대로
-  s.appendChild(se('rect',{x:'22',y:'50',width:'16',height:'6',rx:'2',fill:f}));
-  // 몸통 — mkR 바디 외곽 그대로
-  s.appendChild(se('path',{d:'M12,56 L22,53 L38,53 L48,56 L48,90 Q48,95 44,95 L16,95 Q12,95 12,90Z',fill:f}));
+  // 머리~목~몸통을 하나의 연속 path로 (내부 경계선 없음)
+  s.appendChild(se('path',{d:'M10,35 Q10,8 30,5 Q50,8 50,35 Q50,44 45,47 L38,53 L48,56 L48,90 Q48,95 44,95 L16,95 Q12,95 12,90 L12,56 L22,53 L15,47 Q10,44 10,35Z',fill:f}));
   return s;
 }
 function mkWrap(t,sc){var w=document.createElement('div');w.className='rw';w.dataset.t=t;var base=t.replace('_sil','');if(t.indexOf('_sil')>-1){w.appendChild(mkSil(base,sc));w.style.filter='drop-shadow(0 2px 8px '+((SIL_COLORS[base]||SIL_COLORS.doc)[0])+'40)'}else if(t==='chaos')w.appendChild(mkV(sc));else if(t==='doc')w.appendChild(mkD(sc));else if(t==='titan'){w.appendChild(mkEnemy({id:'titan',color:'#7b1fa2',bodyColor:'#4a148c'},4.5));w.style.filter='drop-shadow(0 0 32px rgba(123,31,162,0.8))'}else w.appendChild(mkR(t,sc));return w}
@@ -1012,72 +1008,72 @@ var S=[
 {t:'ch',n:'',tt:'그날 저녁'},
 {t:'bg',v:'lab-ev'},
 {t:'n',tx:'연구소로 돌아왔다.\n전투의 흥분이 채 가시지 않은 저녁.\n\n다들 무사해서 다행이었다.',ch:['doc']},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"박사님 덕분이야.\n...고마워."',ch:['red'],lo:'left',tk:'red'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"박사님 덕분이야.\n...고마워."',ch:['red_sil'],lo:'left',tk:'red_sil'},
 {t:'n',tx:'레드가 짧게 고개를 숙였다.'},
 {t:'d',sp:'박사',cl:'#9575cd',tx:'"아니에용.\n다들 포기하지 않았으니까용."',ch:['doc'],lo:'right',tk:'doc'},
 {t:'n',tx:'사실 겁이 났다.\n장치가 안 되면 어쩌나,\n내가 갈 필요가 있나.\n\n...하지만 그런 말은 안 했다.'},
 {t:'pause',ms:600},
 
 // ── 블랙 ──
-{t:'n',tx:'복도를 걷다가 블랙과 마주쳤다.\n흡연실 쪽에서 걸어오고 있었다.\n희미한 연기 냄새가 났다.',ch:['black'],lo:'right'},
-{t:'d',sp:'박사',cl:'#9575cd',tx:'"블랙, 오늘 수고했어용."',ch:['doc','black'],lo:'sides',tk:'doc'},
-{t:'d',sp:'블랙',cl:'#999',tx:'"...박사님도."',ch:['black'],lo:'right',tk:'black'},
+{t:'n',tx:'복도를 걷다가 블랙과 마주쳤다.\n흡연실 쪽에서 걸어오고 있었다.\n희미한 연기 냄새가 났다.',ch:['black_sil'],lo:'right'},
+{t:'d',sp:'박사',cl:'#9575cd',tx:'"블랙, 오늘 수고했어용."',ch:['doc','black_sil'],lo:'sides',tk:'doc'},
+{t:'d',sp:'블랙',cl:'#999',tx:'"...박사님도."',ch:['black_sil'],lo:'right',tk:'black_sil'},
 {t:'n',tx:'잠시 아무 말 없이 서 있었다.\n복도에 연기 냄새가 천천히 사라졌다.'},
 {t:'pause',ms:600},
-{t:'d',sp:'블랙',cl:'#999',tx:'"...대단했어."',ch:['black'],lo:'right',tk:'black'},
-{t:'d',sp:'박사',cl:'#9575cd',tx:'"에? 뭐가용?"',ch:['doc','black'],lo:'sides',tk:'doc'},
-{t:'d',sp:'블랙',cl:'#999',tx:'"뛰어온 거.\n...보통은 못 해."',ch:['black'],lo:'right',tk:'black'},
+{t:'d',sp:'블랙',cl:'#999',tx:'"...대단했어."',ch:['black_sil'],lo:'right',tk:'black_sil'},
+{t:'d',sp:'박사',cl:'#9575cd',tx:'"에? 뭐가용?"',ch:['doc','black_sil'],lo:'sides',tk:'doc'},
+{t:'d',sp:'블랙',cl:'#999',tx:'"뛰어온 거.\n...보통은 못 해."',ch:['black_sil'],lo:'right',tk:'black_sil'},
 {t:'q',tx:'',fl:'bk_r',opts:[
   {tx:'▶ "무서웠는데... 가만히 있을 수가 없었어용."',v:'scared'},
   {tx:'▶ "블랙이 버텨줬으니까용."',v:'thanks'}
 ]},
-{t:'d',sp:'블랙',cl:'#999',tx:'"......그래."',ch:['black'],lo:'right',tk:'black'},
+{t:'d',sp:'블랙',cl:'#999',tx:'"......그래."',ch:['black_sil'],lo:'right',tk:'black_sil'},
 {t:'aff',tx:'블랙의 호감도가 올랐다',dir:'up'},
 {t:'n',tx:'블랙이 주머니에 손을 넣고 걸어갔다.\n\n...나쁘지 않았다.'},
 {t:'pause',ms:800},
 
 // ── 레드 ──
-{t:'n',tx:'옥상으로 올라갔다.\n레드가 혼자 야경을 바라보고 있었다.',ch:['red'],lo:'right'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"...오늘은 위험했어.\n솔직히 좀 밀렸다."',ch:['red'],lo:'right',tk:'red'},
+{t:'n',tx:'옥상으로 올라갔다.\n레드가 혼자 야경을 바라보고 있었다.',ch:['red_sil'],lo:'right'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"...오늘은 위험했어.\n솔직히 좀 밀렸다."',ch:['red_sil'],lo:'right',tk:'red_sil'},
 {t:'n',tx:'레드가 난간에 기대며 말했다.'},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"리더라면서\n다들 지키지 못할 뻔했어."',ch:['red'],lo:'right',tk:'red'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"리더라면서\n다들 지키지 못할 뻔했어."',ch:['red_sil'],lo:'right',tk:'red_sil'},
 {t:'q',tx:'',fl:'red_r',opts:[
   {tx:'▶ "덕분에 나도 용기 낼 수 있었어용."',v:'courage'},
   {tx:'▶ "같이 이긴 거잖아용."',v:'together'}
 ]},
-{t:'d',sp:'레드',cl:'#e53935',tx:'"...하, 박사님한테 위로받다니.\n좀 쑥스럽네."',ch:['red'],lo:'right',tk:'red'},
+{t:'d',sp:'레드',cl:'#e53935',tx:'"...하, 박사님한테 위로받다니.\n좀 쑥스럽네."',ch:['red_sil'],lo:'right',tk:'red_sil'},
 {t:'aff',tx:'레드의 호감도가 올랐다',dir:'up'},
 {t:'n',tx:'레드가 피식 웃었다.\n...처음 보는 표정이었다.'},
 {t:'pause',ms:800},
 
 // ── 블루 ──
-{t:'n',tx:'작전실을 지나가는데\n블루가 아직 남아 있었다.',ch:['blue'],lo:'right'},
-{t:'d',sp:'블루',cl:'#42a5f5',tx:'"오늘 부스터 출력, 예상의 세 배였어.\n...그래도 부족했어."',ch:['blue'],lo:'right',tk:'blue'},
-{t:'d',sp:'블루',cl:'#42a5f5',tx:'"다음엔 더 빠르게 움직이고 싶어.\n박사님, 출력 한계를 더 올릴 수 있어?"',ch:['blue'],lo:'right',tk:'blue'},
+{t:'n',tx:'작전실을 지나가는데\n블루가 아직 남아 있었다.',ch:['blue_sil'],lo:'right'},
+{t:'d',sp:'블루',cl:'#42a5f5',tx:'"오늘 부스터 출력, 예상의 세 배였어.\n...그래도 부족했어."',ch:['blue_sil'],lo:'right',tk:'blue_sil'},
+{t:'d',sp:'블루',cl:'#42a5f5',tx:'"다음엔 더 빠르게 움직이고 싶어.\n박사님, 출력 한계를 더 올릴 수 있어?"',ch:['blue_sil'],lo:'right',tk:'blue_sil'},
 {t:'n',tx:'블루의 눈이 반짝이고 있었다.\n\n...좋은 눈이다.'},
 {t:'q',tx:'',fl:'blu_r',opts:[
   {tx:'▶ "다음엔 더 올려볼게용. 기대하셔도 돼용."',v:'dunno'},
   {tx:'▶ "블루가 강하니까 가능한 거에용."',v:'praise'}
 ]},
-{t:'d',sp:'블루',cl:'#42a5f5',tx:'"...고마워.\n다음엔 보여줄게."',ch:['blue'],lo:'right',tk:'blue'},
+{t:'d',sp:'블루',cl:'#42a5f5',tx:'"...고마워.\n다음엔 보여줄게."',ch:['blue_sil'],lo:'right',tk:'blue_sil'},
 {t:'aff',tx:'블루의 호감도가 올랐다',dir:'up'},
 {t:'n',tx:'블루가 희미하게 미소 지었다.\n\n...나쁘지 않은 기분이었다.'},
 {t:'pause',ms:800},
 
 // ── 핑크+옐로 ──
-{t:'n',tx:'휴게실에서 웃음소리가 들렸다.\n핑크가 과자 봉지를 들고 돌아다니고 있었다.',ch:['pink','yellow'],lo:'left'},
-{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"블랙한테도 줬는데\n안 받더라~ 블루는 하나만 먹고~\n레드는 고맙다고만 하고~"',ch:['pink','yellow'],lo:'left',tk:'pink'},
-{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"나는 많이 먹을게~"',ch:['pink','yellow'],lo:'left',tk:'yellow'},
-{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"오늘 진짜 위험했지?!\n근데 박사님 등장 씬—\n완전 드라마였어!!"',ch:['pink','yellow'],lo:'left',tk:'pink'},
-{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"맞아~ 완전 영화 같았어.\n\'여러분, 포기하지 마세요!\'\n하면서~"',ch:['pink','yellow'],lo:'left',tk:'yellow'},
+{t:'n',tx:'휴게실에서 웃음소리가 들렸다.\n핑크가 과자 봉지를 들고 돌아다니고 있었다.',ch:['pink_sil','yellow_sil'],lo:'left'},
+{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"블랙한테도 줬는데\n안 받더라~ 블루는 하나만 먹고~\n레드는 고맙다고만 하고~"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'pink_sil'},
+{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"나는 많이 먹을게~"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'yellow_sil'},
+{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"오늘 진짜 위험했지?!\n근데 박사님 등장 씬—\n완전 드라마였어!!"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'pink_sil'},
+{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"맞아~ 완전 영화 같았어.\n\'여러분, 포기하지 마세요!\'\n하면서~"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'yellow_sil'},
 {t:'n',tx:'...그렇게 흉내 내지 않아도 되는데.'},
-{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"부스터 터지는 순간\n진짜 소름 돋았다구!!"',ch:['pink','yellow'],lo:'left',tk:'pink'},
+{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"부스터 터지는 순간\n진짜 소름 돋았다구!!"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'pink_sil'},
 {t:'q',tx:'',fl:'yp_r',opts:[
   {tx:'▶ "오래오래 이렇게 지내면 좋겠어용."',v:'forever'},
   {tx:'▶ "카오스의 \'전략적 후퇴\' 웃겼어용."',v:'funny'}
 ]},
-{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"맞아~\n카오스 도망가는 것도\n이제 익숙해졌어~"',ch:['pink','yellow'],lo:'left',tk:'yellow'},
-{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"다음에도 박사님이\n달려와 주는 거죠?!"',ch:['pink','yellow'],lo:'left',tk:'pink'},
+{t:'d',sp:'옐로',cl:'#ffd54f',tx:'"맞아~\n카오스 도망가는 것도\n이제 익숙해졌어~"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'yellow_sil'},
+{t:'d',sp:'핑크',cl:'#f48fb1',tx:'"다음에도 박사님이\n달려와 주는 거죠?!"',ch:['pink_sil','yellow_sil'],lo:'left',tk:'pink_sil'},
 {t:'aff',tx:'핑크와 옐로의 호감도가 올랐다',dir:'up'},
 {t:'n',tx:'둘이 깔깔 웃었다.\n나도 따라 웃었다.\n따뜻한 저녁이었다.'},
 {t:'pause',ms:1200},
