@@ -5127,12 +5127,13 @@
       el.textContent = (type === 'heal' ? '+' : '-') + val;
       var tgt = $(targetId);
       if (!tgt) return;
-      var rect = tgt.getBoundingClientRect();
-      var pRect = $('bt-bg').getBoundingClientRect();
-      el.style.left = (rect.left - pRect.left + rect.width / 2 - 20) + 'px';
+      var bg = $('bt-bg');
+      var top = 0, left = 0, cur = tgt;
+      while (cur && cur !== bg) { top += cur.offsetTop; left += cur.offsetLeft; cur = cur.offsetParent }
+      el.style.left = (left + tgt.offsetWidth / 2 - 20) + 'px';
       var isEnemy = targetId === 'bt-esvg';
-      el.style.top = (rect.top - pRect.top - (isEnemy ? rect.height * 0.4 + 10 : 10)) + 'px';
-      $('bt-bg').appendChild(el);
+      el.style.top = (top - (isEnemy ? 30 : 10)) + 'px';
+      bg.appendChild(el);
       setTimeout(function () { el.remove() }, 1000);
     }
 
