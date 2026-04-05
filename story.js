@@ -315,7 +315,7 @@ var S = [
 
   // ── 레드 ──
   { t: 'n', tx: '옥상으로 올라갔다.\n레드가 혼자 야경을 바라보고 있었다.', ch: ['red_sil'], lo: 'right' },
-  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...오늘은 위험했어요.\n새로운 방식이 필요해요.."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...오늘은 위험했어요.\n새로운 방식이 필요해.."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
   { t: 'n', tx: '레드가 난간에 기대며 말했다.' },
   { t: 'd', sp: '레드', cl: '#e53935', tx: '"...내가 리더인데...\n모두를 위험에..."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
   {
@@ -388,25 +388,5 @@ var S = [
   { t: 'n', tx: '오늘 정말로 위험했지만, 모두 무사할 수 있었다.' },
   { t: 'pause', ms: 1500 },
   { t: 'drama', lines: ['앞으로도 계속 평범한 하루가 되기를 바란다.'], cls: '' },
-  { t: 'pause', ms: 2500 },
-  { t: 'drama', lines: ['그리고 내일도,'], cls: '' },
-  { t: 'pause', ms: 2000 },
-  { t: 'drama', lines: ['그럴 거라고 믿었다.'], cls: '' },
-  { t: 'pause', ms: 2500 },
-  { t: 'bg', v: 'night' },
-  { t: 'pause', ms: 1500 },
-  { t: 'sfx', v: '...' },
-  { t: 'pause', ms: 1000 },
-  { t: 'fx', v: 'flash-red' },
-  { t: 'fx', v: 'shake' },
-  { t: 'pause', ms: 800 },
-  { t: 'fx', v: 'flash-red' },
-  { t: 'pause', ms: 1500 },
-  { t: 'drama', lines: ['하지만 그날,'], cls: 'red' },
-  { t: 'pause', ms: 2000 },
-  { t: 'fx', v: 'flash-red' },
-  { t: 'fx', v: 'shake' },
-  { t: 'drama', lines: ['레드는 죽어있었다.'], cls: 'red large' },
-  { t: 'pause', ms: 3500 },
   { t: 'end' }
 ];
