@@ -593,9 +593,9 @@
 
     // ── 난이도 시스템 ──
     var DIFF = {
-      easy:   { label: '이지', hpM: 0.80, atkM: 0.70, rewardM: 0.5, color: '#4ecca3' },
-      normal: { label: '노말', hpM: 1.00, atkM: 1.00, rewardM: 0.5, color: '#ffd700' },
-      hard:   { label: '하드', hpM: 1.25, atkM: 1.50, rewardM: 1.0, color: '#e53935' }
+      easy:   { label: '이지', hpM: 0.80, atkM: 0.70, rewardM: 1.0, color: '#4ecca3' },
+      normal: { label: '노말', hpM: 1.00, atkM: 1.00, rewardM: 1.5, color: '#ffd700' },
+      hard:   { label: '하드', hpM: 1.25, atkM: 1.50, rewardM: 2.0, color: '#e53935' }
     };
     var currentDiff = 'easy';
     function getDiffUnlock() {
@@ -831,7 +831,7 @@
       var unlock = getDiffUnlock();
       ['easy', 'normal', 'hard'].forEach(function (key) {
         var d = DIFF[key]; var btn = document.createElement('button'); btn.className = 'diff-btn';
-        var rewardLabel = key === 'easy' ? ' (보상 50%)' : key === 'normal' ? ' (보상 50%)' : key === 'hard' ? ' (보상 100%)' : '';
+        var rewardLabel = key === 'normal' ? ' (보상 +50%)' : key === 'hard' ? ' (보상 +100%)' : '';
         btn.textContent = d.label + rewardLabel;
         btn.style.borderColor = d.color; btn.style.color = d.color;
         if (key === currentDiff) btn.classList.add('active');
