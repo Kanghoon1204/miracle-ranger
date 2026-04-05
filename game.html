@@ -2995,6 +2995,210 @@
       background: rgba(198, 40, 40, 0.15);
       border-color: #c62828
     }
+
+    /* ═══════════════════════════════════════════
+       모바일 최적화
+       ═══════════════════════════════════════════ */
+
+    /* 전역: 더블탭 줌 방지 + 탭 하이라이트 제거 */
+    button, .ch-btn, .sel-card, .lab-row, .bt-act, .bt-retreat, .rw-card {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    /* 터치 타겟 최소 44px 보장 */
+
+    /* 타이틀 버튼 */
+    .t-start {
+      padding: 14px 32px;
+      min-height: 44px
+    }
+    .t-start.t-story:active {
+      background: rgba(229, 57, 53, 0.35);
+      border-color: #e53935;
+      transform: scale(0.97)
+    }
+    .t-battle:active {
+      background: rgba(255, 215, 0, 0.25) !important;
+      border-color: #ffd700 !important;
+      transform: scale(0.97)
+    }
+
+    /* 선택지 버튼 */
+    .ch-btn {
+      padding: 14px 16px;
+      min-height: 44px
+    }
+    .ch-btn:active {
+      background: rgba(255, 215, 0, 0.15);
+      transform: translateX(4px);
+      border-color: #ffd700
+    }
+
+    /* 전투 액션 버튼 */
+    .bt-act {
+      padding: 12px 8px;
+      min-height: 44px;
+      font-size: 12px
+    }
+    .bt-act.atk:active {
+      background: linear-gradient(135deg, rgba(229, 57, 53, 0.3), rgba(229, 57, 53, 0.1));
+      border-color: #e53935;
+      transform: scale(0.96)
+    }
+    .bt-act.def:active {
+      background: linear-gradient(135deg, rgba(100, 181, 246, 0.25), rgba(100, 181, 246, 0.08));
+      border-color: #64b5f6;
+      transform: scale(0.96)
+    }
+    .bt-act.skill:active {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 215, 0, 0.08));
+      border-color: #ffd700;
+      transform: scale(0.96)
+    }
+    .bt-act.support:active {
+      background: linear-gradient(135deg, rgba(78, 204, 163, 0.25), rgba(78, 204, 163, 0.08));
+      border-color: #4ecca3;
+      transform: scale(0.96)
+    }
+
+    /* 퇴각 버튼 */
+    .bt-retreat {
+      padding: 6px 14px;
+      font-size: 11px;
+      min-height: 32px
+    }
+    .bt-retreat:active {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.1)
+    }
+
+    /* 일시정지 버튼 */
+    .pause-btn {
+      width: 44px;
+      height: 44px;
+      font-size: 18px
+    }
+    .pause-btn:active {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4)
+    }
+
+    /* 일시정지 메뉴 버튼 */
+    .pause-menu-btn {
+      padding: 14px 40px;
+      min-height: 44px
+    }
+    .pause-menu-btn:active {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(0.97)
+    }
+    .pause-menu-btn.resume:active {
+      background: rgba(78, 204, 163, 0.15);
+      border-color: #4ecca3
+    }
+    .pause-menu-btn.danger:active {
+      background: rgba(229, 57, 53, 0.15);
+      border-color: #e53935
+    }
+
+    /* 캐릭터 선택 카드 */
+    .sel-card {
+      min-height: 44px
+    }
+    .sel-card:active {
+      border-color: #888;
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(0.95)
+    }
+
+    /* 출격 버튼 */
+    .sel-go {
+      padding: 14px 36px;
+      min-height: 44px
+    }
+    .sel-go:active {
+      transform: scale(0.97);
+      box-shadow: 0 0 20px rgba(229, 57, 53, 0.4)
+    }
+
+    /* 뒤로 버튼 */
+    .sel-back {
+      padding: 10px 20px;
+      font-size: 13px;
+      min-height: 44px
+    }
+
+    /* 연구소 탭 */
+    .lab-tab {
+      padding: 12px 0;
+      min-height: 44px
+    }
+    .lab-tab:active {
+      border-color: #666
+    }
+
+    /* 연구소 업그레이드 버튼 */
+    .lab-btn {
+      padding: 10px 16px;
+      min-height: 44px
+    }
+    .lab-btn:active {
+      background: rgba(149, 117, 205, 0.5);
+      transform: scale(0.95)
+    }
+
+    /* 연구소 네비게이션 */
+    .lab-nav-btn {
+      padding: 12px 24px;
+      min-height: 44px
+    }
+    .lab-nav-btn:active {
+      border-color: #888;
+      color: #ccc
+    }
+    .lab-nav-btn.primary:active {
+      background: rgba(149, 117, 205, 0.35);
+      box-shadow: 0 0 12px rgba(149, 117, 205, 0.3)
+    }
+
+    /* 초기화 버튼 */
+    .lab-reset {
+      padding: 8px 14px;
+      min-height: 36px
+    }
+    .lab-reset:active {
+      background: rgba(198, 40, 40, 0.15);
+      border-color: #c62828
+    }
+
+    /* 게임오버 버튼 */
+    .go-btn {
+      padding: 14px 32px;
+      min-height: 44px
+    }
+    .go-btn.retry:active {
+      background: rgba(229, 57, 53, 0.3);
+      transform: scale(0.97)
+    }
+
+    /* 엔딩 버튼 */
+    .end-btn {
+      padding: 12px 24px;
+      min-height: 44px
+    }
+
+    /* 스크롤 영역 터치 최적화 */
+    .bt-log, .sel-info, #lab-screen, .lab-grid {
+      -webkit-overflow-scrolling: touch
+    }
+
+    /* 배틀 로그 높이 확대 */
+    .bt-log {
+      max-height: 100px;
+      min-height: 60px
+    }
   </style>
 </head>
 
